@@ -1,0 +1,6 @@
+{
+  "name": "ss15-hurrricanes",
+  "root": "./",
+  "clean_urls": true,
+  "error_page": "error.html"
+}
