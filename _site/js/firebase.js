@@ -195,7 +195,7 @@ function disconnect(callback) {
  * @returns {undefined}
  */
 function onHackNetChanged(hackBoxConnectedCallback, hackBoxChangedCallback, hackBoxDisconnectedCallback,
-  hackBoxConnectedCancelCallback, hackBoxChangedCancelCallback, hackBoxDisconnectedCancelCallback) {
+        hackBoxConnectedCancelCallback, hackBoxChangedCancelCallback, hackBoxDisconnectedCancelCallback) {
   onHackBoxConnected(hackBoxConnectedCallback, hackBoxConnectedCancelCallback);
   onHackBoxChanged(hackBoxChangedCallback, hackBoxChangedCancelCallback);
   onHackBoxDisconnected(hackBoxDisconnectedCallback, hackBoxDisconnectedCancelCallback);
@@ -239,26 +239,31 @@ function onHackBoxDisconnected(callback, cancelCallback) {
  * succeed, successCallback will be called passing a reference to the current
  * connection which is named a hack. If the connection fails, failureCallback will
  * be called with an error.
- * @param {type} hackerUid user id of the hacker
  * @param {type} hackedUid user id of the HackBox which is hacked
  * @param {type} successCallback
  * @param {type} failureCallback
  * @returns {undefined}
  */
-function connectToHackBox(hackerUid, hackedUid, successCallback, failureCallback) {
-  rootRef.child("connected").child(hackedUid).once("value", function (userSnapshot) {
-    if (userSnapshot !== null) {   
+function connectToHackBox(hackedUid, successCallback, failureCallback) {
+  var user = getAuth();
+  rootRef.child("connected").child(user.uid).once("value", function(userSnapshot) {
+    if (userSnapshot !== null) {
       var hacksRef = rootRef.child("users").child(hackedUid).child("hacks");
       var newHackRef = hacksRef.push();
       newHackRef.set({
-        hacker: hackerUid,
+        hacker: user.uid,
         passcode: Math.round(Math.random() * userSnapshot.val().coins)
+      }, function(error) {
+        if (error === null) {
+          successCallback(newHackRef);
+        } else {
+          failureCallback(error);
+        }
       });
-      successCallback(newHackRef);
     } else {
       failureCallback("This HackBox is not connected to the HackNet");
     }
-  }, function (error) {
+  }, function(error) {
     failureCallback(error);
   });
 }
