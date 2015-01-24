@@ -147,7 +147,7 @@ function connect(successCallback, failureCallback) {
   var authData = getAuth();
   if (authData !== null) {
     rootRef.child("users").child(authData.uid).once("value", function(userSnapshot) {
-      if (userSnapshot !== null) {
+      if (userSnapshot.val() !== null) {
         var connectedRef = rootRef.child("connected").child(authData.uid);
         var data = {};
         data["coins"] = userSnapshot.val()["coins"];
