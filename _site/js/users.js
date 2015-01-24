@@ -29,8 +29,8 @@ function authDataCallback(authData) {
         $("#loginTwitter").hide();
         $("#loginGoogle").hide();
         $("#loginFb").hide();
-        var url = "/ss15-hurrricanes/_site/";    
-        $(location).attr('href',url);
+        var url = "../_site/";    
+        window.location.replace(url);
        // $("#logout").show();
     } else {
         $("#loginGithub").show();
