@@ -268,3 +268,22 @@ function connectToHackBox(hackedUid, successCallback, failureCallback) {
     failureCallback(error);
   });
 }
+
+/**
+ * Rejisters a listener to callback when a another HackBox is connected.
+ * @param {type} onNewHackCallBack is called when a new Hack is initiated
+ * @param {type} onHackChangeCallBack is called when a hack changed
+ * @param {type} onHackStoppedCallBack is called when a hack stopped
+ */
+function onHack(onNewHackCallBack, onHackChangeCallBack, onHackStoppedCallBack) {
+  var user = getAuth();
+  if (onNewHackCallBack !== null) {
+    rootRef.child("users").child(user.uid).child("hacks").on("child_added", onNewHackCallBack);
+  }
+  if (onHackChangeCallBack !== null) {
+    rootRef.child("users").child(user.uid).child("hacks").on("child_changed", onHackChangeCallBack);
+  }
+  if (onHackStoppedCallBack !== null) {
+    rootRef.child("users").child(user.uid).child("hacks").on("child_removed", onHackStoppedCallBack);
+  }
+}
