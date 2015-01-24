@@ -1,42 +1,31 @@
-$(document).ready(function () {
-    $("#loginGithub").click(function () {
-        loginViaGitHub();
-    });
+$(function () {
 
-    $("#loginTwitter").click(function () {
-        loginViaTwitter();
-    });
+    function loginModel() {
+        var self = this;
+        onAuth(authDataCallback);
+        self.loginGithub = function () {
+            loginViaGitHub();
+        }
+        self.loginTwitter = function () {
+            loginViaTwitter();
+        }
+        self.loginGoogle = function () {
+            loginViaGoogle();
+        }
+        self.loginFb = function () {
+            loginViaFacebook();
+        }
 
-    $("#loginGoogle").click(function () {
-        loginViaGoogle();
-    });
-    $("#loginFb").click(function () {
-        loginViaFacebook();
-    });
 
-    $("#logout").click(function () {
-        logout();
-    });
+        function authDataCallback(authData) {
+            if (authData) {
+                var url = "../_site/";
+                window.location.replace(url);
 
-    // Register the callback to be fired every time auth state changes
-    onAuth(authDataCallback);
+            }
+        }
+
+    }
+    ko.applyBindings(new loginModel());
 });
 
-// Create a callback which logs the current auth state
-function authDataCallback(authData) {
-    if (authData) {
-        $("#loginGithub").hide();
-        $("#loginTwitter").hide();
-        $("#loginGoogle").hide();
-        $("#loginFb").hide();
-        var url = "../_site/";    
-        window.location.replace(url);
-       // $("#logout").show();
-    } else {
-        $("#loginGithub").show();
-        $("#loginTwitter").show();
-        $("#loginGoogle").show();
-        $("#loginFb").show();
-       // $("#logout").hide();
-    }
-}
