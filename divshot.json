@@ -1,6 +1,7 @@
 {
   "name": "ss15-hurrricanes",
-  "root": "./",
+  "root": "./_site",
   "clean_urls": true,
-  "error_page": "error.html"
+  "error_page": "error.html",
+  "exclude": ".divshot-cache .git"
 }
