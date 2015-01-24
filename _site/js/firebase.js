@@ -179,6 +179,17 @@ function disconnect() {
   }
 }
 
+/**
+ * Callsback when the HackNet changes: a HackBox connected, HackBox changed (eg: coins),
+ * HackBox disconnected.
+ * @param {type} hackBoxConnectedCallback
+ * @param {type} hackBoxChangedCallback
+ * @param {type} hackBoxDisconnectedCallback
+ * @param {type} hackBoxConnectedCancelCallback
+ * @param {type} hackBoxChangedCancelCallback
+ * @param {type} hackBoxDisconnectedCancelCallback
+ * @returns {undefined}
+ */
 function onHackNetChanged(hackBoxConnectedCallback, hackBoxChangedCallback, hackBoxDisconnectedCallback,
   hackBoxConnectedCancelCallback, hackBoxChangedCancelCallback, hackBoxDisconnectedCancelCallback) {
   onHackBoxConnected(hackBoxConnectedCallback, hackBoxConnectedCancelCallback);
