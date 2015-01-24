@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $("#login").click(function() {
+  $("#loginGithub").click(function() {
     loginViaGitHub();
   });
 
@@ -14,10 +14,10 @@ $(document).ready(function() {
 // Create a callback which logs the current auth state
 function authDataCallback(authData) {
   if (authData) {
-    $("#login").hide();
-    $("#logout").show();
+    $("#loginGithub").hide();
+    $("#logoutGithub").show();
   } else {
-    $("#login").show();
-    $("#logout").hide();
+    $("#loginGithub").show();
+    $("#logoutGithub").hide();
   }
 }
