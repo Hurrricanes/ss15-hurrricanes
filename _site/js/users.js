@@ -14,15 +14,22 @@ $(document).ready(function() {
   // Register the callback to be fired every time auth state changes
   ref.onAuth(authDataCallback);
 
-  $("#login").click(function() {
+});
+  $("#loginGithub").click(function() {
     login();
   });
 
-  $("#logout").click(function() {
+  $("#logoutGithub").click(function() {
     logout();
   });
-});
+  
+    $("#loginTwitter").click(function() {
+    login();
+  });
 
+  $("#logoutTwitter").click(function() {
+    logout();
+  });
 // Authorizes users with GitHub authentication
 function login() {
   ref.authWithOAuthPopup("github", function(error, authData) {
@@ -68,11 +75,11 @@ function authDataCallback(authData) {
       }
     });
     
-    $("#login").hide();
-    $("#logout").show();
+    $("#loginGithub").hide();
+    $("#logoutGithub").show();
   } else {
     console.log("User is logged out");
-    $("#login").show();
-    $("#logout").hide();
+    $("#loginGithub").show();
+    $("#logoutGithub").hide();
   }
 }
