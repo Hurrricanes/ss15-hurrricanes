@@ -43,6 +43,9 @@
         </div>
         <div class="col-xs-3 col-md-3">
           <h3>Users</h3>
+          <div data-bind="foreach: users()">
+            <p data-bind="text: displayName || username"></p>
+          </div>
         </div>
       </div>
     </div>
