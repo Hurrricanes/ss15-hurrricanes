@@ -8,3 +8,18 @@
     overflow: hidden;
     padding: 20px;
 }
+.overlay-center {
+	margin: 0 auto;
+	width: 100px;
+	text-align: center;
+}
+.btn {
+	border-radius: 0px;
+}
+.top-header {
+	margin: 20px 0;
+	height: auto;
+}
+.game-window {
+	margin-top: 20px;
+}
