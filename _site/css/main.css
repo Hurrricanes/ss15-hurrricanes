@@ -1,5 +1,5 @@
 .logincard {
-    max-width: 20%;
+    max-width: 30%;
     margin-top: 10%;
     margin: 0 auto;
     margin-bottom: 20px;
@@ -22,4 +22,8 @@
 }
 .game-window {
 	margin-top: 20px;
+}
+.innerDiv {
+	margin: 10% ;  
+	max-width: 80%;
 }
