@@ -148,14 +148,15 @@ function connect(successCallback, failureCallback) {
   if (authData !== null) {
     rootRef.child("users").child(authData.uid).once("value", function(userSnapshot) {
       var connectedRef = rootRef.child("connected").child(authData.uid);
-      connectedRef.child("connected").set(true);
-      connectedRef.child("coins").set(userSnapshot.val()["coins"]);
+      var data = {};
+      data["coins"] = userSnapshot.val()["coins"];
       if (typeof authData[authData.provider].displayName != "undefined") {
-        connectedRef.child("displayName").set(authData[authData.provider].displayName);
+        data["displayName"] = authData[authData.provider].displayName;
       }
       if (typeof authData[authData.provider].username != "undefined") {
-        connectedRef.child("username").set(authData[authData.provider].username);
+        data["username"] = authData[authData.provider].username;
       }
+      connectedRef.set(data);
       connectedRef.onDisconnect().remove();
       successCallback();
     }, function(error) {
@@ -167,13 +168,49 @@ function connect(successCallback, failureCallback) {
 }
 
 /**
-* Disconnects the user from HackNet
-* @returns {undefined}
-*/
+ * Disconnects the user from HackNet
+ * @returns {undefined}
+ */
 function disconnect() {
   var user = getAuth();
   if (user !== null) {
     var connectedRef = rootRef.child("connected");
     connectedRef.child(user.uid).remove();
   }
+}
+
+function onHackNetChanged(hackBoxConnectedCallback, hackBoxChangedCallback, hackBoxDisconnectedCallback,
+  hackBoxConnectedCancelCallback, hackBoxChangedCancelCallback, hackBoxDisconnectedCancelCallback) {
+  onHackBoxConnected(hackBoxConnectedCallback, hackBoxConnectedCancelCallback);
+  onHackBoxChanged(hackBoxChangedCallback, hackBoxChangedCancelCallback);
+  onHackBoxDisconnected(hackBoxDisconnectedCallback, hackBoxDisconnectedCancelCallback);
+}
+
+/**
+ * Callsback when a new HackBox is connected to the network. When the
+ * registering happens the first time, it will return all the HackBoxes one by
+ * one.
+ * @param {type} callback
+ * @param {type} cancelCallback is called if the registration is cancelled
+ * @returns {undefined}
+ */
+function onHackBoxConnected(callback, cancelCallback) {
+  rootRef.child("connected").on("child_added", callback, cancelCallback);
+}
+
+/**
+ * Callsback when a hackbox is changed. This is important to identify the coin
+ * changes.
+ * @returns {undefined}
+ */
+function onHackBoxChanged(callback, cancelCallback) {
+  rootRef.child("connected").on("child_changed", callback, cancelCallback);
+}
+
+/**
+ * Callsback when a hackbox is removed.
+ * @returns {undefined}
+ */
+function onHackBoxDisconnected(callback, cancelCallback) {
+  rootRef.child("connected").on("child_removed", callback, cancelCallback);
 }
