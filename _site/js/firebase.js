@@ -138,11 +138,12 @@ function manageConnection(uid) {
 /** Game **/
 
 function connect() {
-  var user = getAuth();
-  if (user !== null) {
-    var connectedRef = rootRef.child("connected").child(user.uid).set(true);
-    connectedRef.child(user.uid).child('displayName').set(user[user.auth.provider].displayName);
-    connectedRef.child(user.uid).onDisconnect().remove();
+  var authData = getAuth();
+  if (authData !== null) {
+    var connectedRef = rootRef.child("connected").child(authData.uid);
+    connectedRef.child('connected').set(true);
+    connectedRef.child('displayName').set(authData[authData.provider].displayName);
+    connectedRef.onDisconnect().remove();
   }
 }
 
