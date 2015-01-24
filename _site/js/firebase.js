@@ -171,23 +171,23 @@ function connect(successCallback, failureCallback) {
  * Disconnects the user from HackNet
  * @returns {undefined}
  */
-function disconnect() {
+function disconnect(callback) {
   var user = getAuth();
   if (user !== null) {
     var connectedRef = rootRef.child("connected");
-    connectedRef.child(user.uid).remove();
+    connectedRef.child(user.uid).remove(callback);
   }
 }
 
 /**
  * Callsback when the HackNet changes: a HackBox connected, HackBox changed (eg: coins),
  * HackBox disconnected.
- * @param {type} hackBoxConnectedCallback
- * @param {type} hackBoxChangedCallback
- * @param {type} hackBoxDisconnectedCallback
- * @param {type} hackBoxConnectedCancelCallback
- * @param {type} hackBoxChangedCancelCallback
- * @param {type} hackBoxDisconnectedCancelCallback
+ * @param {type} hackBoxConnectedCallback will be called when a HackBox is connected to the HackNet
+ * @param {type} hackBoxChangedCallback will be called when a HackBox which is connected to the HackNet is changed
+ * @param {type} hackBoxDisconnectedCallback will be called when a HackBox is disconnected to the HackNet
+ * @param {type} hackBoxConnectedCancelCallback will be called when the registration for the hackBoxConnected event is failed
+ * @param {type} hackBoxChangedCancelCallback will be called when the registration for the hackBoxChanged event is failed
+ * @param {type} hackBoxDisconnectedCancelCallback will be called when the registration for the hackBoxDisconnected event is failed
  * @returns {undefined}
  */
 function onHackNetChanged(hackBoxConnectedCallback, hackBoxChangedCallback, hackBoxDisconnectedCallback,
