@@ -4,22 +4,37 @@ and open the template in the editor.
 -->
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>LogIn</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <head>
+        <title>LogIn</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="css/bootstrap.css" rel="stylesheet">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+      
+        <script src="https://cdn.firebase.com/js/client/2.1.1/firebase.js"></script>
+        <script src="js/jquery-1.11.2.min.js"></script>
+        <script src="js/firebase.js"></script>
+        <script src="js/users.js"></script>
+     
+    </head>
+    <body>
+        <a class="btn btn-block btn-social btn-facebook" id="loginFb">
+            <i class="fa fa-facebook"></i> Sign in with Facebook
+        </a>
+        
+        <a class="btn btn-block btn-social btn-google-plus" id="loginGoogle" >
+            <i class="fa fa-google-plus"></i> Sign in with Google
+        </a>
+        <a class="btn btn-block btn-social btn-twitter" id="loginTwitter">
+            <i class="fa fa-twitter"></i> Sign in with Twitter
+        </a>
+        <a class="btn btn-block btn-social btn-github" id="loginGithub">
+            <i class="fa fa-github"></i> Sign in with Git hub
+        </a>
+        <a class="btn btn-block btn-social btn-twitter" id="logout">
+            Sign Out
+        </a>
+       
 
-    <script src="https://cdn.firebase.com/js/client/2.1.1/firebase.js"></script>
-    <script src="js/jquery-1.11.2.min.js"></script>
-    <script src="js/firebase.js"></script>
-    <script src="js/users.js"></script>
-  </head>
-  <body>
-    <a href="#" id="loginGithub">Login Github</a><br />
-    <a href="#" id="loginTwitter">Login Twitter</a><br />
-    <a href="#" id="loginGoogle">Login Google</a><br />
-    <a href="#" id="loginFb">Login FaceBook</a><br />
-    <a href="#" id="logout">Logout</a>
-    
-    
-  </body>
+
+    </body>
 </html>
