@@ -184,6 +184,19 @@ function disconnect(callback) {
 }
 
 /**
+ * References to HackBox connections
+ */
+var hackBoxConnectedRef = null;
+var hackBoxChangedRef = null;
+var hackBoxDisconnectedRef = null;
+/**
+ * References to HackBox connection callback functions
+ */
+var hackBoxConnectedCallbackRef = null;
+var hackBoxChangedCallbackRef = null;
+var hackBoxDisconnectedCallbackRef = null;
+
+/**
  * Callsback when the HackNet changes: a HackBox connected, HackBox changed (eg: coins),
  * HackBox disconnected.
  * @param {type} hackBoxConnectedCallback will be called when a HackBox is connected to the HackNet
@@ -202,6 +215,15 @@ function onHackNetChanged(hackBoxConnectedCallback, hackBoxChangedCallback, hack
 }
 
 /**
+ * Removes all listeners from HackNetChange.
+ */
+function offHackNetChanged() {
+  offHackBoxConnected();
+  offHackBoxChanged();
+  offHackBoxDisconnected();
+}
+
+/**
  * Callsback when a new HackBox is connected to the network. When the
  * registering happens the first time, it will return all the HackBoxes one by
  * one.
@@ -210,7 +232,14 @@ function onHackNetChanged(hackBoxConnectedCallback, hackBoxChangedCallback, hack
  * @returns {undefined}
  */
 function onHackBoxConnected(callback, cancelCallback) {
-  rootRef.child("connected").on("child_added", callback, cancelCallback);
+  // Remove previouse callback if exists
+  if (hackBoxConnectedCallbackRef !== null) {
+    offHackBoxConnected();
+  }
+
+  hackBoxConnectedRef = rootRef.child("connected");
+  hackBoxConnectedRef.on("child_added", callback, cancelCallback);
+  hackBoxConnectedCallbackRef = callback;
 }
 
 /**
@@ -219,7 +248,14 @@ function onHackBoxConnected(callback, cancelCallback) {
  * @returns {undefined}
  */
 function onHackBoxChanged(callback, cancelCallback) {
-  rootRef.child("connected").on("child_changed", callback, cancelCallback);
+  // Remove previouse callback if exists
+  if (hackBoxChangedCallbackRef !== null) {
+    offHackBoxChanged();
+  }
+
+  hackBoxChangedRef = rootRef.child("connected");
+  hackBoxChangedRef.on("child_changed", callback, cancelCallback);
+  hackBoxChangedCallbackRef = callback;
 }
 
 /**
@@ -227,7 +263,44 @@ function onHackBoxChanged(callback, cancelCallback) {
  * @returns {undefined}
  */
 function onHackBoxDisconnected(callback, cancelCallback) {
-  rootRef.child("connected").on("child_removed", callback, cancelCallback);
+  // Remove previouse callback if exists
+  if (hackBoxDisconnectedCallbackRef !== null) {
+    offHackBoxDisconnected();
+  }
+
+  hackBoxDisconnectedRef = rootRef.child("connected");
+  hackBoxDisconnectedRef.on("child_removed", callback, cancelCallback);
+  hackBoxDisconnectedCallbackRef = callback;
+}
+
+/**
+ * Removes the callback on HackBox connections.
+ */
+function offHackBoxConnected() {
+  if (hackBoxConnectedRef !== null) {
+    hackBoxConnectedRef.off("child_added", hackBoxConnectedCallbackRef);
+  }
+  hackBoxConnectedRef = null;
+}
+
+/**
+ * Removes the callback on connected HackBox changes.
+ */
+function offHackBoxChanged() {
+  if (hackBoxChangedRef !== null) {
+    hackBoxChangedRef.off("child_changed", hackBoxChangedCallbackRef);
+  }
+  hackBoxChangedRef = null;
+}
+
+/**
+ * Removes the callback from HackBox disconnections.
+ */
+function offHackBoxDisconnected() {
+  if (hackBoxDisconnectedRef !== null) {
+    hackBoxDisconnectedRef.off("child_removed", hackBoxDisconnectedCallbackRef);
+  }
+  hackBoxDisconnectedRef = null;
 }
 
 /** End of HackNet **/
