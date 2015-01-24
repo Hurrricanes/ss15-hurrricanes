@@ -8,6 +8,10 @@ $(document).ready(function() {
    $("#loginTwitter").click(function() {
     loginViaTwitter();
   });
+  
+  $("#loginGoogle").click(function() {
+    loginViaGoogle();
+  });
 
   $("#logout").click(function() {
     logout();
@@ -22,10 +26,12 @@ function authDataCallback(authData) {
   if (authData) {
     $("#loginGithub").hide();
     $("#loginTwitter").hide();
+    $("#loginGoogle").hide();
     $("#logout").show();
   } else {
     $("#loginGithub").show();
      $("#loginTwitter").show();
+       $("#loginGoogle").show();
     $("#logout").hide();
   }
 }
