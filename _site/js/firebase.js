@@ -15,6 +15,7 @@ function onAuth(onAuthCallback) {
   rootRef.onAuth(onAuthCallback);
 }
 
+// Authorizes users with Twitter
 function loginViaTwitter() {
   login("twitter");
 }
@@ -22,6 +23,11 @@ function loginViaTwitter() {
 // Authorizes users with GitHub
 function loginViaGitHub() {
   login("github");
+}
+
+// Authorizes users with Google
+function loginViaGoogle() {
+  login("google");
 }
 
 // Authorizes users with the given provider
