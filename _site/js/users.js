@@ -3,7 +3,13 @@ $(document).ready(function() {
     loginViaGitHub();
   });
 
-  $("#logoutGithub").click(function() {
+ 
+  
+   $("#loginTwitter").click(function() {
+    loginViaTwitter();
+  });
+
+  $("#logout").click(function() {
     logout();
   });
 
@@ -15,9 +21,11 @@ $(document).ready(function() {
 function authDataCallback(authData) {
   if (authData) {
     $("#loginGithub").hide();
-    $("#logoutGithub").show();
+    $("#loginTwitter").hide();
+    $("#logout").show();
   } else {
     $("#loginGithub").show();
-    $("#logoutGithub").hide();
+     $("#loginTwitter").show();
+    $("#logout").hide();
   }
 }
