@@ -1,13 +1,5 @@
-/**
- * Manges the things of users like authentication.
- * Login and logout buttons/links/whatever must have the id "login" and "logout"
- * to function it correctly.
- * JQuery and Firebase js' should be added.
- */
-
-var ref;
-
 $(document).ready(function() {
+<<<<<<< HEAD
   // making a reference to the firebase
   ref = new Firebase("https://ss15-hurrricanes.firebaseio.com");
 
@@ -17,11 +9,16 @@ $(document).ready(function() {
 });
   $("#loginGithub").click(function() {
     login();
+=======
+  $("#login").click(function() {
+    loginViaGitHub();
+>>>>>>> cad599c1e4e019f9db4890b9c49bfcdf0ceaf097
   });
 
   $("#logoutGithub").click(function() {
     logout();
   });
+<<<<<<< HEAD
   
     $("#loginTwitter").click(function() {
     login();
@@ -52,15 +49,17 @@ function login() {
     }
   });
 }
+=======
+>>>>>>> cad599c1e4e019f9db4890b9c49bfcdf0ceaf097
 
-// Logs out the user
-function logout() {
-  ref.unauth();
-}
+  // Register the callback to be fired every time auth state changes
+  onAuth(authDataCallback);
+});
 
 // Create a callback which logs the current auth state
 function authDataCallback(authData) {
   if (authData) {
+<<<<<<< HEAD
     console.log("User " + authData.uid + " is logged in with " + authData.provider);
     
     // Check whether the user exixsts.
@@ -81,5 +80,12 @@ function authDataCallback(authData) {
     console.log("User is logged out");
     $("#loginGithub").show();
     $("#logoutGithub").hide();
+=======
+    $("#login").hide();
+    $("#logout").show();
+  } else {
+    $("#login").show();
+    $("#logout").hide();
+>>>>>>> cad599c1e4e019f9db4890b9c49bfcdf0ceaf097
   }
 }
