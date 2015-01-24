@@ -68,6 +68,16 @@ function logout() {
   rootRef.unauth();
 }
 
+function getAuth() {
+  var authData = rootRef.getAuth();
+  if (authData) {
+    console.log("User " + authData.uid + " is logged in with " + authData.provider);
+  } else {
+    console.log("User is logged out");
+  }
+  return authData;
+}
+
 // Create a callback which logs the current auth state
 function authenticationCallback(authData) {
   if (authData) {
