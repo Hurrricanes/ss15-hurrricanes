@@ -137,16 +137,40 @@ function manageConnection(uid) {
 
 /** Game **/
 
-function connect() {
+/**
+ * Connects the user to HackNet
+ * @param {type} successCallback
+ * @param {type} failureCallback
+ * @returns {undefined}
+ */
+function connect(successCallback, failureCallback) {
   var authData = getAuth();
   if (authData !== null) {
-    var connectedRef = rootRef.child("connected").child(authData.uid);
-    connectedRef.child('connected').set(true);
-    connectedRef.child('displayName').set(authData[authData.provider].displayName);
-    connectedRef.onDisconnect().remove();
+    rootRef.child("user").child(authData.uid).once("value", function(userSnapshot) {
+      var connectedRef = rootRef.child("connected").child(authData.uid);
+      connectedRef.child("connected").set(true);
+      connectedRef.child("coins").set(userSnapshot.val()["coins"]);
+      if (typeof authData[authData.provider].displayName != "undefined") {
+        connectedRef.child("displayName").set(authData[authData.provider].displayName);
+      }
+      if (typeof authData[authData.provider].username != "undefined") {
+        connectedRef.child("username").set(authData[authData.provider].username);
+      }
+      connectedRef.onDisconnect().remove();
+      successCallback();
+    }, function(error) {
+      alert(JSON.stringify(error));
+      failureCallback(error);
+    });
+  } else {
+    failureCallback({error: "Authentication failed!"});
   }
 }
 
+/**
+* Disconnects the user from HackNet
+* @returns {undefined}
+*/
 function disconnect() {
   var user = getAuth();
   if (user !== null) {
