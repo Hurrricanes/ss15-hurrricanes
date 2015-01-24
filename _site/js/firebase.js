@@ -135,7 +135,7 @@ function manageConnection(uid) {
 
 /** End of Authentication **/
 
-/** Game **/
+/** HackNet **/
 
 /**
  * Connects the user to HackNet
@@ -224,4 +224,37 @@ function onHackBoxChanged(callback, cancelCallback) {
  */
 function onHackBoxDisconnected(callback, cancelCallback) {
   rootRef.child("connected").on("child_removed", callback, cancelCallback);
+}
+
+/** End of HackNet **/
+
+/** Hack **/
+
+/**
+ * Connects this HackBox to the HackBox related to the given uid. If the connection
+ * succeed, successCallback will be called passing a reference to the current
+ * connection which is named a hack. If the connection fails, failureCallback will
+ * be called with an error.
+ * @param {type} hackerUid user id of the hacker
+ * @param {type} hackedUid user id of the HackBox which is hacked
+ * @param {type} successCallback
+ * @param {type} failureCallback
+ * @returns {undefined}
+ */
+function connectToHackBox(hackerUid, hackedUid, successCallback, failureCallback) {
+  rootRef.child("connected").child(hackedUid).once("value", function (userSnapshot) {
+    if (userSnapshot !== null) {   
+      var hacksRef = rootRef.child("users").child(hackedUid).child("hacks");
+      var newHackRef = hacksRef.push();
+      newHackRef.set({
+        hacker: hackerUid,
+        passcode: Math.round(Math.random() * userSnapshot.val().coins)
+      });
+      successCallback(newHackRef);
+    } else {
+      failureCallback("This HackBox is not connected to the HackNet");
+    }
+  }, function (error) {
+    failureCallback(error);
+  });
 }
