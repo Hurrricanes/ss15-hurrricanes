@@ -147,18 +147,22 @@ function connect(successCallback, failureCallback) {
   var authData = getAuth();
   if (authData !== null) {
     rootRef.child("users").child(authData.uid).once("value", function(userSnapshot) {
-      var connectedRef = rootRef.child("connected").child(authData.uid);
-      var data = {};
-      data["coins"] = userSnapshot.val()["coins"];
-      if (typeof authData[authData.provider].displayName != "undefined") {
-        data["displayName"] = authData[authData.provider].displayName;
+      if (userSnapshot !== null) {
+        var connectedRef = rootRef.child("connected").child(authData.uid);
+        var data = {};
+        data["coins"] = userSnapshot.val()["coins"];
+        if (typeof authData[authData.provider].displayName != "undefined") {
+          data["displayName"] = authData[authData.provider].displayName;
+        }
+        if (typeof authData[authData.provider].username != "undefined") {
+          data["username"] = authData[authData.provider].username;
+        }
+        connectedRef.set(data);
+        connectedRef.onDisconnect().remove();
+        successCallback();
+      } else {
+        failureCallback("Cannot find the user!");
       }
-      if (typeof authData[authData.provider].username != "undefined") {
-        data["username"] = authData[authData.provider].username;
-      }
-      connectedRef.set(data);
-      connectedRef.onDisconnect().remove();
-      successCallback();
     }, function(error) {
       failureCallback(error);
     });
