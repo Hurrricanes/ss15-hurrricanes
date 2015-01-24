@@ -8,6 +8,9 @@
     overflow: hidden;
     padding: 20px;
 }
+.btn-social{
+  margin-bottom: 15px;  
+}
 .image{
     margin-top: 5%; 
 }
@@ -27,7 +30,9 @@
 	margin-top: 20px;
 }
 .innerDiv {
+    
 	margin: 10% ;  
+        margin-top: 16px; 
 	max-width: 80%;
 }
 
