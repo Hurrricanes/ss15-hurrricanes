@@ -6,22 +6,44 @@
   <script src="https://cdn.firebase.com/js/client/2.1.1/firebase.js"></script>
   <script src="js/jquery-1.11.2.min.js"></script>
   <script type="text/javascript" src="js/knockout-3.2.0.js"></script>
+  <script type="text/javascript" src="js/bootstrap.js"></script>
   <script src="js/firebase.js"></script>
-  <script src="js/users.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/bootstrap-theme.css">
+  <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <title>My Divshot Application</title>
-
-  <style>
-    body{
-      font:500 14px/21px 'Helvetica Neue', Helvetica, Arials;
-      padding:40px;
-    }
-  </style>
-
+  <title>Hackbox</title>
 </head>
+
 <body>
-  <i class="fa fa-spinner fa-pulse fa-5x"></i>
+
+  <div class="top-header">
+    <button class="btn btn-default" data-bind="click: signout, if: isLoggedIn()"><i class="fa fa-sign-out"></i>Signout</button>
+  </div>
+  <div class="container">  
+    <div class="overlay-center" data-bind="if: !isLoggedIn()">
+      <i class="fa fa-circle-o-notch fa-spin fa-5x"></i>
+    </div>
+    <div class="content" data-bind="if: isLoggedIn()">
+
+      <div class="row">
+        <div class="col-xs-8 col-md-8"></div>
+        <div class="col-xs-8 col-md-4">
+          <button class="btn btn-danger">Connect</button>
+        </div>        
+      </div>
+
+      <div class="row game-window">
+        <div class="col-xs-8 col-md-8">
+          Game
+        </div>
+        <div class="col-xs-8 col-md-4">
+          Users
+        </div>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>

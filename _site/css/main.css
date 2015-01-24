@@ -8,10 +8,27 @@
     overflow: hidden;
     padding: 20px;
 }
-
-.innedrDiv{
-     margin: 10% ;  
-    max-width: 80%;
+.image{
+    margin-top: 5%; 
+}
+.overlay-center {
+	margin: 0 auto;
+	width: 100px;
+	text-align: center;
+}
+.btn {
+	border-radius: 0px;
+}
+.top-header {
+	margin: 20px 0;
+	height: auto;
+}
+.game-window {
+	margin-top: 20px;
+}
+.innerDiv {
+	margin: 10% ;  
+	max-width: 80%;
 }
 
 .ui-slider.ui-slider-horizontal.ui-widget.ui-widget-content.ui-corner-all {
@@ -19,6 +36,7 @@
     border-radius: 14px;
     margin-top: 20px;
 }
+
 .ui-slider-handle.ui-state-default.ui-corner-all {
     background: url("../img/sliderhandle.png") no-repeat scroll center center transparent !important;
     border: medium none;
@@ -26,6 +44,7 @@
     outline: medium none;
     width: 1.3em;
 }
+
 .ui-slider-range.ui-widget-header.ui-corner-all {
     background: url("../img/sliderfill.png") repeat scroll 0 0 transparent;
 }
