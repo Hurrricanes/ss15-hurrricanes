@@ -29,12 +29,14 @@ function authDataCallback(authData) {
         $("#loginTwitter").hide();
         $("#loginGoogle").hide();
         $("#loginFb").hide();
-        $("#logout").show();
+        var url = "/ss15-hurrricanes/_site/";    
+        $(location).attr('href',url);
+       // $("#logout").show();
     } else {
         $("#loginGithub").show();
         $("#loginTwitter").show();
         $("#loginGoogle").show();
         $("#loginFb").show();
-        $("#logout").hide();
+       // $("#logout").hide();
     }
 }
