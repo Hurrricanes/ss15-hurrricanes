@@ -16,27 +16,27 @@ function onAuth(onAuthCallback) {
 }
 
 // Authorizes users with Twitter
-function loginViaTwitter() {
-  login("twitter");
+function loginViaTwitter(successCallback, failureCallback) {
+  login("twitter", successCallback, failureCallback);
 }
 
 // Authorizes users with GitHub
-function loginViaGitHub() {
-  login("github");
+function loginViaGitHub(successCallback, failureCallback) {
+  login("github", successCallback, failureCallback);
 }
 
 // Authorizes users with Google
-function loginViaGoogle() {
-  login("google");
+function loginViaGoogle(successCallback, failureCallback) {
+  login("google", successCallback, failureCallback);
 }
 
 // Authorizes users with Facebook
-function loginViaFacebook() {
-  login("facebook");
+function loginViaFacebook(successCallback, failureCallback) {
+  login("facebook", successCallback, failureCallback);
 }
 
 // Authorizes users with the given provider
-function login(provider) {
+function login(provider, successCallback, failureCallback) {
   rootRef.authWithOAuthPopup(provider, function(error, authData) {
     if (error) {
       console.log("Login Failed via popup!", error);
@@ -47,16 +47,16 @@ function login(provider) {
         rootRef.authWithOAuthRedirect(provider, function(error, authData) {
           if (error) {
             console.log("Login Failed!", error);
-            return null;
+            failureCallback(error);
           } else {
             console.log("Authenticated successfully with payload:", authData);
-            return authData;
+            successCallback(authData);
           }
         });
       }
     } else {
       console.log("Authenticated successfully with payload:", authData);
-      return authData;
+      successCallback(authData);
     }
   }, {
     remember: "sessionOnly"
@@ -65,6 +65,7 @@ function login(provider) {
 
 // Logs out the user
 function logout() {
+  disconnect();
   rootRef.unauth();
 }
 
@@ -85,13 +86,19 @@ function authenticationCallback(authData) {
 
     // Check whether the user exixsts.
     rootRef.child("users").child(authData.uid).once("value", function(snapshot) {
-      if (snapshot.exists()) {
+      if (snapshot.val() === null) {
         // If the user exists we update the data.
-        rootRef.child("users").child(authData.uid).update(authData);
+        rootRef.child("users").child(authData.uid).update({
+          provider: authData.provider,
+          displayName: authData[authData.provider].displayName
+        });
       } else {
         // otherwise we add a new user
-        rootRef.child("users").child(authData.uid).set(authData);
-        rootRef.child("users").child(authData.uid).child("gamedata/coins").set(1000);
+        rootRef.child("users").child(authData.uid).set({
+          provider: authData.provider,
+          displayName: authData[authData.provider].displayName,
+          coins: 1000
+        });
       }
     });
 
@@ -133,8 +140,8 @@ function manageConnection(uid) {
 function connect() {
   var user = getAuth();
   if (user !== null) {
-    var connectedRef = rootRef.child("connected");
-    connectedRef.child(user.uid).set(true);
+    var connectedRef = rootRef.child("connected").child(user.uid).set(true);
+    connectedRef.child(user.uid).child('displayName').set(user[user.auth.provider].displayName);
     connectedRef.child(user.uid).onDisconnect().remove();
   }
 }
