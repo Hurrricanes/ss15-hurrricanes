@@ -13,3 +13,19 @@
      margin: 10% ;  
     max-width: 80%;
 }
+
+.ui-slider.ui-slider-horizontal.ui-widget.ui-widget-content.ui-corner-all {
+    border: 1px solid #dbdbdb;
+    border-radius: 14px;
+    margin-top: 20px;
+}
+.ui-slider-handle.ui-state-default.ui-corner-all {
+    background: url("../img/sliderhandle.png") no-repeat scroll center center transparent !important;
+    border: medium none;
+    height: 1.3em;
+    outline: medium none;
+    width: 1.3em;
+}
+.ui-slider-range.ui-widget-header.ui-corner-all {
+    background: url("../img/sliderfill.png") repeat scroll 0 0 transparent;
+}

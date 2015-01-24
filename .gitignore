@@ -1,2 +1,6 @@
 /.divshot-cache
 /nbproject/private/
+.idea/
+*.ipr
+*.iws
+*.iml

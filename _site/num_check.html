@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <!-- Import CSS -->
+    <link href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" type="text/css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+
+
+    <script src="js/jquery-1.11.2.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/knockout-3.2.0.js"></script>
+    <script type="application/javascript">
+
+        /** Define the scope of the num_hack.models */
+        var num_hack = num_hack || {};
+        num_hack.models = num_hack.models || {};
+        num_hack.view = num_hack.view || {};
+
+        /** Boundary Values */
+        RANDOM = random_number(0,100);
+        MIN_BOUNDARY = 0;
+        MAX_BOUNDARY = random_number(60,100);
+
+        console.log("RANDOM : " + RANDOM + " | MIN_BOUNDARY : " + MIN_BOUNDARY + " | MAX_BOUNDARY : " + MAX_BOUNDARY);
+
+        /**
+         * View Model For Value Range Object
+         * @param constructorParam
+         * @constructor
+         */
+        num_hack.models.ValueRangeViewModel = function ( constructorParam ) {
+            var self = this;
+
+            console.log("var : " + JSON.stringify(constructorParam));
+            self.random = ko.observable( constructorParam.RANDOM );
+            self.minVal = ko.observable( constructorParam.MIN_BOUNDARY );
+            self.maxVal = ko.observable( constructorParam.MAX_BOUNDARY );
+            self.userValue = ko.observable( 0 );
+
+            self.rangeText = ko.computed( function () {
+                return "Value between " + self.minVal() + " - " + self.maxVal();
+            }, self );
+
+            /** This will observe any changes happens to ValueRangeViewModel's attributes */
+            self.changed = ko.computed( function () {
+                var min = self.minVal();
+                var max = self.maxVal();
+                var uVal = self.userValue();
+                console.info("CHANGE : minVal = " + self.minVal() + " | maxVal = " + self.maxVal());
+                return;
+            }, self );
+
+            /** This will observe any changes happens to userValue() attribute */
+            self.userValueChanged = ko.computed( function () {
+                var uVal = self.userValue();
+                console.info("CHANGE : userValue = " + self.userValue());
+
+                if (uVal > self.random()) {
+                    self.maxVal(uVal);
+                } else if (uVal < self.random()) {
+                    self.minVal(uVal);
+                } else {
+                    alert("You won");
+                }
+
+                $( "#slider-value" ).slider( "option", "values", [ self.minVal(), self.maxVal() ] );
+
+
+                return;
+            }, self );
+        };
+
+        num_hack.view.valueRangeViewModel = new num_hack.models.ValueRangeViewModel(                      // This is the view model for Value Range
+                {
+                    RANDOM : RANDOM,
+                    MIN_BOUNDARY : MIN_BOUNDARY,
+                    MAX_BOUNDARY : MAX_BOUNDARY
+                }
+        );
+
+
+        /**
+         * This will initialize the Value Slider
+         */
+        num_hack.view.initializeValueSlider = function () {
+            $( function() {
+                $( "#slider-value" ).slider( {
+                    range: true,
+                    min: MIN_BOUNDARY,
+                    max: MAX_BOUNDARY,
+                    values: [ MIN_BOUNDARY, MAX_BOUNDARY ],
+                    slide: function( event, ui ) {
+                        num_hack.view.valueRangeViewModel.minVal(ui.values[ 0 ]);
+                        num_hack.view.valueRangeViewModel.maxVal(ui.values[ 1 ]);
+                    }
+                });
+            });
+        };
+
+        $( document ).ready( function() {
+            ko.applyBindings( num_hack.view.valueRangeViewModel, $( "#value-range" )[ 0 ]);
+
+            num_hack.view.initializeValueSlider();
+        });
+
+        function random_number(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+
+
+    </script>
+</head>
+<body>
+
+
+<div id="value-range" class="sliderfilter valuerange">
+    <div class="slidertitle">Value</div>
+    <div data-bind="text: rangeText" class="sliderrangetext"></div>
+    <div id="slider-value" class="clear slidervalue"></div>
+    <input data-bind="value: userValue" id="user-value" type="number" />
+</div>
+</body>
+</html>
