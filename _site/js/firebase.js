@@ -250,6 +250,7 @@ function connectToHackBox(hackedUid, successCallback, failureCallback) {
     if (userSnapshot !== null) {
       var hacksRef = rootRef.child("users").child(hackedUid).child("hacks");
       var newHackRef = hacksRef.push();
+      newHackRef.onDisconnect().remove();
       newHackRef.set({
         hacker: user.uid,
         passcode: Math.round(Math.random() * userSnapshot.val().coins)
