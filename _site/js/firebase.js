@@ -69,7 +69,7 @@ function logout() {
 }
 
 function getAuth() {
-  var authData = ref.getAuth();
+  var authData = rootRef.getAuth();
   if (authData) {
     console.log("User " + authData.uid + " is logged in with " + authData.provider);
   } else {
