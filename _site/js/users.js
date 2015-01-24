@@ -4,16 +4,16 @@ $(function () {
         var self = this;
         onAuth(authDataCallback);
         self.loginGithub = function () {
-            loginViaGitHub();
+            loginViaGitHub(function () {}, function () {});
         }
         self.loginTwitter = function () {
-            loginViaTwitter();
+            loginViaTwitter(function () {}, function () {});
         }
         self.loginGoogle = function () {
             loginViaGoogle();
         }
         self.loginFb = function () {
-            loginViaFacebook();
+            loginViaFacebook(function () {}, function () {});
         }
 
 
