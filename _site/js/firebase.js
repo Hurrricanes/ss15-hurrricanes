@@ -30,6 +30,11 @@ function loginViaGoogle() {
   login("google");
 }
 
+// Authorizes users with Facebook
+function loginViaFacebook() {
+  login("facebook");
+}
+
 // Authorizes users with the given provider
 function login(provider) {
   rootRef.authWithOAuthPopup(provider, function(error, authData) {
