@@ -16,7 +16,7 @@ function onAuth(onAuthCallback) {
 }
 
 function loginViaTwitter() {
-  login("github");
+  login("twitter");
 }
 
 // Authorizes users with GitHub
@@ -47,6 +47,8 @@ function login(provider) {
       console.log("Authenticated successfully with payload:", authData);
       return authData;
     }
+  }, {
+    remember: "sessionOnly"
   });
 }
 
