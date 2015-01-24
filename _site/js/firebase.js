@@ -146,7 +146,7 @@ function manageConnection(uid) {
 function connect(successCallback, failureCallback) {
   var authData = getAuth();
   if (authData !== null) {
-    rootRef.child("user").child(authData.uid).once("value", function(userSnapshot) {
+    rootRef.child("users").child(authData.uid).once("value", function(userSnapshot) {
       var connectedRef = rootRef.child("connected").child(authData.uid);
       connectedRef.child("connected").set(true);
       connectedRef.child("coins").set(userSnapshot.val()["coins"]);
@@ -159,11 +159,10 @@ function connect(successCallback, failureCallback) {
       connectedRef.onDisconnect().remove();
       successCallback();
     }, function(error) {
-      alert(JSON.stringify(error));
       failureCallback(error);
     });
   } else {
-    failureCallback({error: "Authentication failed!"});
+    failureCallback("Authentication failed!");
   }
 }
 
