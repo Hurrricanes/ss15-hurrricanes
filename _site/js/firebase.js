@@ -232,11 +232,6 @@ function offHackNetChanged() {
  * @returns {undefined}
  */
 function onHackBoxConnected(callback, cancelCallback) {
-  // Remove previouse callback if exists
-  if (hackBoxConnectedCallbackRef !== null) {
-    offHackBoxConnected();
-  }
-
   hackBoxConnectedRef = rootRef.child("connected");
   hackBoxConnectedRef.on("child_added", callback, cancelCallback);
   hackBoxConnectedCallbackRef = callback;
@@ -248,11 +243,6 @@ function onHackBoxConnected(callback, cancelCallback) {
  * @returns {undefined}
  */
 function onHackBoxChanged(callback, cancelCallback) {
-  // Remove previouse callback if exists
-  if (hackBoxChangedCallbackRef !== null) {
-    offHackBoxChanged();
-  }
-
   hackBoxChangedRef = rootRef.child("connected");
   hackBoxChangedRef.on("child_changed", callback, cancelCallback);
   hackBoxChangedCallbackRef = callback;
@@ -263,11 +253,6 @@ function onHackBoxChanged(callback, cancelCallback) {
  * @returns {undefined}
  */
 function onHackBoxDisconnected(callback, cancelCallback) {
-  // Remove previouse callback if exists
-  if (hackBoxDisconnectedCallbackRef !== null) {
-    offHackBoxDisconnected();
-  }
-
   hackBoxDisconnectedRef = rootRef.child("connected");
   hackBoxDisconnectedRef.on("child_removed", callback, cancelCallback);
   hackBoxDisconnectedCallbackRef = callback;
