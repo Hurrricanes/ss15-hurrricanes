@@ -1,6 +1,6 @@
 $(document).ready(function() {
   $("#loginGithub").click(function() {
-    loginViaGitHub();
+    loginViaFacebook();
   });
 
  
