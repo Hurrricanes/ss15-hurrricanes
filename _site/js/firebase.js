@@ -125,3 +125,24 @@ function manageConnection(uid) {
     }
   });
 }
+
+/** End of Authentication **/
+
+/** Game **/
+
+function connect() {
+  var user = getAuth();
+  if (user !== null) {
+    var connectedRef = rootRef.child("connected");
+    connectedRef.child(user.uid).set(true);
+    connectedRef.child(user.uid).onDisconnect().remove();
+  }
+}
+
+function disconnect() {
+  var user = getAuth();
+  if (user !== null) {
+    var connectedRef = rootRef.child("connected");
+    connectedRef.child(user.uid).remove();
+  }
+}
