@@ -97,7 +97,8 @@ $(function() {
       var index = self.getIndexForObject('con', obj);
       if (index != undefined) {
         self.conBoxes.splice(index, 1);
-      };
+      }
+      ;
     }
 
     // callback function to detect new hack
@@ -115,7 +116,8 @@ $(function() {
         var box = obj.val();
         box['box_id'] = obj.key();
         self.hackBoxes.push(box);
-      };
+      }
+      ;
     }
 
     // callback function to detect hacks closed
@@ -123,7 +125,8 @@ $(function() {
       var index = self.getIndexForObject('hack', obj);
       if (index != undefined) {
         self.hackBoxes.splice(index, 1);
-      };
+      }
+      ;
     }
 
     self.connected = new buzz.sound("sounds/connected", {
@@ -152,7 +155,7 @@ $(function() {
                 onHack(self.onNewHackCallBack, self.onHackChangeCallBack, self.onHackStoppedCallBack);
                 term.echo('Connection successful!');
               }, function(error) {
-                if (typeof(error) == "function") {
+                if (typeof (error) == "function") {
                   term.error("Connection failed!");
                 } else {
                   term.error(error);
@@ -234,6 +237,9 @@ $(function() {
               }
               break;
             case 'help':
+              jQuery.get('text/readme.txt', function(data) {
+                term.echo(data);
+              });
               // show guide to Hackbox
               break;
             default:
