@@ -83,20 +83,23 @@ function getAuth() {
 function authenticationCallback(authData) {
   if (authData) {
     console.log("User " + authData.uid + " is logged in with " + authData.provider);
-
+    
     // Check whether the user exixsts.
     rootRef.child("users").child(authData.uid).once("value", function(snapshot) {
       if (snapshot.val() !== null) {
         // If the user exists we update the data.
         rootRef.child("users").child(authData.uid).update({
           provider: authData.provider,
-          displayName: authData[authData.provider].displayName
+          displayName: authData[authData.provider].displayName,
+          username: authData[authData.provider].username,
+          ip: generateHash(authData.uid)
         });
       } else {
         // otherwise we add a new user
         rootRef.child("users").child(authData.uid).set({
           provider: authData.provider,
           displayName: authData[authData.provider].displayName,
+          username: authData[authData.provider].username,
           coins: 1000,
           ip: generateHash(authData.uid)
         });
