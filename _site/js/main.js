@@ -4,6 +4,8 @@ $(function () {
         self.isLoggedIn = ko.observable(false);
         self.isConnected = ko.observable(false);
         self.users = ko.observableArray([]);
+        self.conBoxes = ko.observableArray([]);
+        self.hackBoxes = ko.observableArray([]);
         // Register the callback to be fired every time auth state changes
         self.user = getAuth();
 
@@ -20,9 +22,21 @@ $(function () {
             window.location.replace("login.html");
         }
 
-        self.getIndexForUser = function (user) {
-        	for (var i = 0; i < self.users().length; i++) {
-                if (self.users()[i]['box_id'] == user.key()) {
+        self.getIndexForObject = function (type, obj) {
+        	var arr = [];
+        	switch(type) {
+        		case 'user':
+        			arr = self.users();
+        			break;
+        		case 'con':
+        			arr = self.conBoxes();
+        			break;
+        		case 'hack':
+        			arr = self.hackBoxes();
+        			break;
+        	}
+        	for (var i = 0; i < arr.length; i++) {
+                if (arr[i]['box_id'] == obj.key()) {
                     return i;
                 }
             }
@@ -33,14 +47,13 @@ $(function () {
         self.hackBoxConnectedCallback = function (user) {
             var box = user.val();
             box['box_id'] = user.key();
-            box['connected'] = false;
             self.users.push(box);
         }
 
         // callback function to detect disconnection of a user
         self.hackBoxDisconnectedCallback = function (user) {
             // find the box with the correct id and remove id from the array
-        	var index = self.getIndexForUser(user);
+        	var index = self.getIndexForObject('user', user);
         	if (index != undefined) {
         		self.users.splice(index, 1);	
         	};
@@ -48,46 +61,67 @@ $(function () {
 
 		// callback function to detect changes of a user
 		self.hackBoxChangedCallback = function (user) {
-			var index = self.getIndexForUser(user);
+			var index = self.getIndexForObject('user', user);
         	if (index != undefined) {
-        		var users = self.users();
-        		var connected = users[index]['connected'];        		
+        		var users = self.users();       		
         		self.users([]);
         		users[index] = user.val();
-        		users[index]['connected'] = connected;
             	users[index]['box_id'] = user.key();
         		self.users(users);
         	};
 		}
 
 		// callback function to detect new connection
-		self.onNewConnection = function (con) {
-			var index = self.getIndexForUser(con);
-			if (index != undefined) {
-				self.users()[index]['connected'] = true;
-			};
+		self.onNewConnection = function (obj) {
+			var box = obj.val();
+            box['box_id'] = obj.key();
+            self.conBoxes.push(box);
 		}
 
         // callback function to detect changes in exisiting connections
-        self.onConnectionChanged = function (con) {
+        self.onConnectionChanged = function (obj) {
+        	var index = self.getIndexForObject('con', obj);
+			if (index != undefined) {
+				self.conBoxes.splice(index, 1);				
+				var box = obj.val();
+	            box['box_id'] = obj.key();
+	            self.conBoxes.push(box);
+			};
         }
 
 		// callback function to detect connections closed
-		/**
-		* TODO: not working at the moment. disconnect mechanism should be implemented in firebase
-		*/
-		self.onConnectionClosed = function (con) {
-			var index = self.getIndexForUser(con);
+		self.onConnectionClosed = function (obj) {
+			var index = self.getIndexForObject('con', obj);
 			if (index != undefined) {
-				self.users()[index]['connected'] = false;
+				self.conBoxes.splice(index, 1);
 			};
 		}
 
-        self.connectedBoxes = ko.computed(function () {
-            return ko.utils.arrayFilter(self.users(), function (item) {
-                return item['connected'] == true;
-            });
-        });
+		// callback function to detect new hack
+		self.onNewHackCallBack = function (obj) {
+			var box = obj.val();
+            box['box_id'] = obj.key();
+            self.hackBoxes.push(box);
+		}
+
+        // callback function to detect changes in exisiting hacks
+        self.onHackChangeCallBack = function (obj) {
+        	var index = self.getIndexForObject('hack', obj);
+			if (index != undefined) {
+				self.hackBoxes.splice(index, 1);				
+				var box = obj.val();
+	            box['box_id'] = obj.key();
+	            self.hackBoxes.push(box);
+			};
+        }
+
+		// callback function to detect hacks closed
+		self.onHackStoppedCallBack = function (obj) {
+			var index = self.getIndexForObject('hack', obj);
+			if (index != undefined) {
+				self.hackBoxes.splice(index, 1);
+			};
+		}
 
         self.connected = new buzz.sound("sounds/connected", {
             formats: ["mp3"]
