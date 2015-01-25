@@ -55,6 +55,7 @@ $(function () {
 		        			// connect to firebase
 		        			term.echo("Connecting...");
 							connect(function () {
+                                                            
 								self.isConnected(true);
 								// register listeners to hackbox changes
 								onHackNetChanged(self.hackBoxConnectedCallback, self.hackBoxChangedCallback, self.hackBoxDisconnectedCallback);
