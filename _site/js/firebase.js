@@ -83,26 +83,26 @@ function getAuth() {
 function authenticationCallback(authData) {
   if (authData) {
     console.log("User " + authData.uid + " is logged in with " + authData.provider);
-    
+
     // Check whether the user exixsts.
     rootRef.child("users").child(authData.uid).once("value", function(snapshot) {
+      var data = {};
+      if (typeof authData[authData.provider].displayName != "undefined") {
+        data["displayName"] = authData[authData.provider].displayName;
+      }
+      if (typeof authData[authData.provider].username != "undefined") {
+        data["username"] = authData[authData.provider].username;
+      }
+      data["provider"] = authData.provider;
+      data["ip"] = generateHash(authData.uid);
+      
       if (snapshot.val() !== null) {
         // If the user exists we update the data.
-        rootRef.child("users").child(authData.uid).update({
-          provider: authData.provider,
-          displayName: authData[authData.provider].displayName,
-          username: authData[authData.provider].username,
-          ip: generateHash(authData.uid)
-        });
+        rootRef.child("users").child(authData.uid).update(data);
       } else {
         // otherwise we add a new user
-        rootRef.child("users").child(authData.uid).set({
-          provider: authData.provider,
-          displayName: authData[authData.provider].displayName,
-          username: authData[authData.provider].username,
-          coins: 1000,
-          ip: generateHash(authData.uid)
-        });
+        data["coins"] = 1000;
+        rootRef.child("users").child(authData.uid).set(data);
       }
     });
 
@@ -114,22 +114,35 @@ function authenticationCallback(authData) {
 
 function generateHash(uid) {
   var hash = uid.hashCode();
+  var minus = false;
+  if (hash < 0) {
+    minus = true;
+    hash = -hash;
+  }
   var first = Math.round(hash / (100 * 100 * 100) % 100);
   var second = Math.round(hash % (100 * 100 * 100) / (100 * 100));
   var third = Math.round(hash % (100 * 100) / 100);
   var fourth = Math.round(hash % 100);
-  return first + "." + second + "." + third + "." + fourth;
+
+  var ip = first + "." + second + "." + third + "." + fourth;
+
+  if (minus) {
+    ip = "0." + ip;
+  }
+
+  return ip;
 }
 
-String.prototype.hashCode = function(){
-    var hash = 0;
-    if (this.length == 0) return hash;
-    for (i = 0; i < this.length; i++) {
-        char = this.charCodeAt(i);
-        hash = ((hash<<5)-hash)+char;
-        hash = hash & hash; // Convert to 32bit integer
-    }
+String.prototype.hashCode = function() {
+  var hash = 0;
+  if (this.length == 0)
     return hash;
+  for (i = 0; i < this.length; i++) {
+    char = this.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash;
 }
 
 
