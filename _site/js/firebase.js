@@ -397,6 +397,7 @@ function connectToHackBox(hackedUid, successCallback, failureCallback) {
                   connectionData["attempts"] = 10;
                   connectionData["coins"] = hackedUser.coins;
                   userInConnectionRef.set(connectionData);
+                  successCallback();
                 } else {
                   failureCallback(error);
                 }
