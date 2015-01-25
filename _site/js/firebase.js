@@ -86,7 +86,7 @@ function authenticationCallback(authData) {
 
     // Check whether the user exixsts.
     rootRef.child("users").child(authData.uid).once("value", function(snapshot) {
-      if (snapshot.val() === null) {
+      if (snapshot.val() !== null) {
         // If the user exists we update the data.
         rootRef.child("users").child(authData.uid).update({
           provider: authData.provider,
@@ -97,7 +97,8 @@ function authenticationCallback(authData) {
         rootRef.child("users").child(authData.uid).set({
           provider: authData.provider,
           displayName: authData[authData.provider].displayName,
-          coins: 1000
+          coins: 1000,
+          ip: generateHash(authData.uid)
         });
       }
     });
@@ -108,6 +109,27 @@ function authenticationCallback(authData) {
   }
 }
 
+function generateHash(uid) {
+  var hash = uid.hashCode();
+  var first = Math.round(hash / (100 * 100 * 100) % 100);
+  var second = Math.round(hash % (100 * 100 * 100) / (100 * 100));
+  var third = Math.round(hash % (100 * 100) / 100);
+  var fourth = Math.round(hash % 100);
+  return first + "." + second + "." + third + "." + fourth;
+}
+
+String.prototype.hashCode = function(){
+    var hash = 0;
+    if (this.length == 0) return hash;
+    for (i = 0; i < this.length; i++) {
+        char = this.charCodeAt(i);
+        hash = ((hash<<5)-hash)+char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
+}
+
+
 // Manages the connection status
 function manageConnection(uid) {
   // since I can connect from multiple devices or browser tabs, we store each connection instance separately
@@ -115,7 +137,7 @@ function manageConnection(uid) {
 //  var myConnectionsRef = new Firebase('https://ss15-hurrricanes.firebaseio.com/users/' + uid + '/connections');
   var onlineRef = new Firebase('https://ss15-hurrricanes.firebaseio.com/online/' + uid);
   // stores the timestamp of my last disconnect (the last time I was seen online)
-  var lastOnlineRef = new Firebase('https://ss15-hurrricanes.firebaseio.com/users/' + uid + '/lastOnline');
+//  var lastOnlineRef = new Firebase('https://ss15-hurrricanes.firebaseio.com/users/' + uid + '/lastOnline');
   var connectedRef = new Firebase('https://ss15-hurrricanes.firebaseio.com/.info/connected');
   connectedRef.on('value', function(snap) {
     if (snap.val() === true) {
@@ -128,7 +150,7 @@ function manageConnection(uid) {
 //      con.onDisconnect().remove();
       online.onDisconnect().remove();
       // when I disconnect, update the last time I was seen online
-      lastOnlineRef.onDisconnect().set(Firebase.ServerValue.TIMESTAMP);
+//      lastOnlineRef.onDisconnect().set(Firebase.ServerValue.TIMESTAMP);
     }
   });
 }
