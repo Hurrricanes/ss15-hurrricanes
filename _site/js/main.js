@@ -41,8 +41,10 @@ $(function () {
 			};
 		}
 
-		self.hackBoxChangedCallback = function (user) {}
+		// callback function to detect changes of a user
+		self.hackBoxChangedCallback = function (user) {
 
+		}
 
 	    $('#terminal').terminal(function(command, term) {
 	        if (args !== '') {

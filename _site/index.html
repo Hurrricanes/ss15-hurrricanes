@@ -1,75 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <script src="https://cdn.firebase.com/js/client/2.1.1/firebase.js"></script>
-  <script src="js/jquery-1.11.2.min.js"></script>
-  <script type="text/javascript" src="js/knockout-3.2.0.js"></script>
-  <script type="text/javascript" src="js/bootstrap.js"></script>
-  <script src="js/firebase.js"></script>
-  <script src="js/jquery.terminal-0.8.8.min.js"></script>
-  <script src="js/jquery.mousewheel.js"></script>
-  <script type="text/javascript" src="js/main.js"></script>
-  <link rel="stylesheet" href="css/bootstrap.css">
-  <link rel="stylesheet" href="css/bootstrap-theme.css">
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="css/jquery.terminal.css">
-  
-  <title>Hackbox</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="https://cdn.firebase.com/js/client/2.1.1/firebase.js"></script>
+    <script src="js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="js/knockout-3.2.0.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/jquery.terminal-0.8.8.min.js"></script>
+    <script src="js/jquery.mousewheel.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/jquery.terminal.css">
+    <title>Hackbox</title>
 </head>
 
 <body>
-  <div class="container"> 
-        <div class="top-header">
-    <div class="row">
-      <div class="col-xs-8 col-md-8"></div>      
-      <div class="col-xs-2 col-md-2">
-          <button disabled class="btn btn-success" data-bind="visible: !isConnected()"><i class="fa fa-cubes"></i></button>
-          <button disabled class="btn btn-success" data-bind="visible: isConnected()"><i class="fa fa-cube"></i></button>
-      </div>
-      <div class="col-xs-2 col-md-2">
-          <button class="btn btn-info" data-bind="click: signout, visible: isLoggedIn()"><i class="fa fa-sign-out"></i>Signout</button>
-      </div> 
+    <div class="container"> 
+    <div class="top-header">
+        <div class="row">
+            <div class="col-xs-8 col-md-8"></div>      
+            <div class="col-xs-2 col-md-2">
+                <button disabled class="btn btn-success" data-bind="visible: !isConnected()"><i class="fa fa-cubes"></i></button>
+                <button disabled class="btn btn-success" data-bind="visible: isConnected()"><i class="fa fa-cube"></i></button>
+            </div>
+            <div class="col-xs-2 col-md-2">
+                <button class="btn btn-info" data-bind="click: signout, visible: isLoggedIn()"><i class="fa fa-sign-out"></i>Signout</button>
+            </div> 
         </div>
     </div>
     <div class="overlay-center" data-bind="if: !isLoggedIn()">
-      <i class="fa fa-circle-o-notch fa-spin fa-5x"></i>
+        <i class="fa fa-circle-o-notch fa-spin fa-5x"></i>
     </div>
     <div class="content" data-bind="if: isLoggedIn()">
-
-      <!-- <div class="row">
-        <div class="col-xs-10 col-md-10"></div>
-        <div class="col-xs-2 col-md-2">
-          <button class="btn btn-danger" data-bind="click: connect, visible: !isConnected()"><i class="fa fa-cubes"></i>
-Connect</button>
-          <button class="btn btn-success" data-bind="click: disconnect, visible: isConnected()"><i class="fa fa-cube"></i>
-Disconnect</button>
-        </div>        
-      </div> -->
-
-      <div class="row game-window">
-        <div class="col-xs-12 col-md-8" >
-          <h3>Game</h3>
-          <div id="terminal"></div>   
+        <div class="row game-window">
+            <div class="col-xs-12 col-md-8" >
+                <h3>Game</h3>
+                <div id="terminal"></div>   
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <h3>Users</h3>
+                <ul class="list-group" data-bind="foreach: users()">
+                    <li class="list-group-item" data-bind="css: {active: connected}">
+                        <div class="col-xs-10 col-md-10">
+                            <a href="#" data-bind="text: displayName || username, click: $parent.connectToHackBox"></a>
+                        </div>
+                        <div>
+                            <p data-bind="text: coins"></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="col-xs-12 col-md-4">
-          <h3>Users</h3>
-          <ul class="list-group" data-bind="foreach: users()">
-            <li class="list-group-item" data-bind="css: {active: connected}">
-              <div class="col-xs-10 col-md-10">
-                <a href="#" data-bind="text: displayName || username, click: $parent.connectToHackBox"></a>
-              </div>
-              <div>
-                <p data-bind="text: coins"></p>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
     </div>
-  </div>
+    </div>
 
 </body>
 </html>
