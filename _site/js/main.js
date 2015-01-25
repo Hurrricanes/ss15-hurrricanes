@@ -60,14 +60,14 @@ $(function () {
                     switch (args[0]) {
                         case 'connect':
                             // connect to firebase
-                            self.connected.play();
-                                   
+
                             term.echo("Connecting...");
                             connect(function () {
 
                                 self.isConnected(true);
                                 // register listeners to hackbox changes
                                 onHackNetChanged(self.hackBoxConnectedCallback, self.hackBoxChangedCallback, self.hackBoxDisconnectedCallback);
+                                self.connected.play();
                                 term.echo('Connection successful!');
                             }, function (error) {
                                 self.isConnected(false);
@@ -88,7 +88,7 @@ $(function () {
                                 } else {
                                     self.disconnected.play();
                                     term.echo('Disconnected');
-                                    
+
                                 }
                             });
                             self.users([]); // clear user list if current user is disconnected
