@@ -8,14 +8,15 @@ body {
     margin: 0 auto;
     margin-bottom: 20px;
     background-color: #EAE6F8;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 30px white;
     overflow: hidden;
+    
     padding: 20px;
 }
 .btn-social{
   margin-bottom: 15px;  
 }
-.image{
+#image{
     margin-top: 5%; 
 }
 .overlay-center {
