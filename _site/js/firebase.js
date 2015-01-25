@@ -406,7 +406,7 @@ function onConnection(onNewConnection, onConnectionChanged, onConnectionClosed) 
 /**
  * Cracks a passcode of a connected HackBox
  */
-function crackPasscode(passcode, hackedUid, successCallback, failureCallback) {
+function crackPasscode(passcode, hackedUid, successCallback, infoCallBack, failureCallback) {
   var user = getAuth();
   var hackRef = rootRef.child("users").child(hackedUid).child("hacks").child(user.uid);
   hackRef.once("value", function(hackSnapshot) {
@@ -455,9 +455,9 @@ function crackPasscode(passcode, hackedUid, successCallback, failureCallback) {
         }, function(error, commited, attempts) {
           if (commited) { // If the hack is not removed due to no attempts
             if (hack.passcode < passcode) {
-              failureCallback("Passcode is less than " + passcode + ".");
+              infoCallback("Passcode is less than " + passcode + ".");
             } else {
-              failureCallback("Passcode is greater than " + passcode + ".");
+              infoCallback("Passcode is greater than " + passcode + ".");
             }
           }
         });
