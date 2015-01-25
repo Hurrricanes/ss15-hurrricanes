@@ -304,26 +304,34 @@ function offHackBoxDisconnected() {
  */
 function connectToHackBox(hackedUid, successCallback, failureCallback) {
   var user = getAuth();
+  if (user.uid == hackedUid) {
+    failureCallback("You cannot hack yourself!");
+    return;
+  }
   rootRef.child("connected").child(user.uid).once("value", function(userSnapshot) {
     if (userSnapshot !== null) {
-      var hacksRef = rootRef.child("users").child(hackedUid).child("hacks");
-      var newHackRef = hacksRef.push();
-      newHackRef.onDisconnect().remove();
-      newHackRef.set({
-        hacker: user.uid,
-        passcode: Math.round(Math.random() * userSnapshot.val().coins)
-      }, function(error) {
-        if (error === null) {
-          var connectionsRef = rootRef.child("users").child(user.uid).child("connections");
-          var newConnectionRef = connectionsRef.push();
-          newConnectionRef.onDisconnect().remove();
-          newConnectionRef.set({
-            hacked: hackedUid
+      var hackRef = rootRef.child("users").child(hackedUid).child("hacks").child(user.uid);
+      hackRef.onDisconnect().remove();
+      hackRef.once("value", function(hackSnapshot) {
+        if (hackSnapshot.val() === null) {
+          hackRef.set({
+            passcode: Math.round(Math.random() * userSnapshot.val().coins),
+            attempts: 10
+          }, function(error) {
+            if (error === null) {
+              var connectionRef = rootRef.child("users").child(user.uid).child("connections").child(hackedUid);
+              connectionRef.onDisconnect().remove();
+              connectionRef.set({
+                hacked: hackedUid
+              });
+              successCallback();
+            } else {
+              failureCallback(error);
+            }
           });
-          successCallback(newHackRef);
-        } else {
-          failureCallback(error);
         }
+      }, function(error) {
+        failureCallback(error);
       });
     } else {
       failureCallback("This HackBox is not connected to the HackNet");
