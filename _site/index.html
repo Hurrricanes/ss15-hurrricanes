@@ -18,12 +18,14 @@
 
 <body>
   <div class="container"> 
-    <div class="col-xs-10 col-md-10"></div>
-    <div class="col-xs-2 col-md-2">
-      <div class="top-header">
-        <button class="btn btn-info" data-bind="click: signout, visible: isLoggedIn()"><i class="fa fa-sign-out"></i>Signout</button>
-      </div>
-    </div> 
+    <div class="row">
+      <div class="col-xs-10 col-md-10"></div>
+      <div class="col-xs-2 col-md-2">
+        <div class="top-header">
+          <button class="btn btn-info" data-bind="click: signout, visible: isLoggedIn()"><i class="fa fa-sign-out"></i>Signout</button>
+        </div>
+      </div> 
+    </div>
     <div class="overlay-center" data-bind="if: !isLoggedIn()">
       <i class="fa fa-circle-o-notch fa-spin fa-5x"></i>
     </div>
@@ -32,19 +34,28 @@
       <div class="row">
         <div class="col-xs-10 col-md-10"></div>
         <div class="col-xs-2 col-md-2">
-          <button class="btn btn-danger" data-bind="click: connect, visible: !isConnected()">Connect</button>
-          <button class="btn btn-success" data-bind="click: disconnect, visible: isConnected()">Disconnect</button>
+          <button class="btn btn-danger" data-bind="click: connect, visible: !isConnected()"><i class="fa fa-cubes"></i>
+Connect</button>
+          <button class="btn btn-success" data-bind="click: disconnect, visible: isConnected()"><i class="fa fa-cube"></i>
+Disconnect</button>
         </div>        
       </div>
 
       <div class="row game-window">
-        <div class="col-xs-9 col-md-9">
+        <div class="col-xs-12 col-md-8">
           <h3>Game</h3>
         </div>
-        <div class="col-xs-3 col-md-3">
+        <div class="col-xs-12 col-md-4">
           <h3>Users</h3>
           <ul class="list-group" data-bind="foreach: users()">
-            <li class="list-group-item" ><a href="#" data-bind="text: username || displayName, click: $parent.connectToBox"></a></li>
+            <li class="list-group-item" >
+              <div class="col-xs-10 col-md-10">
+                <a href="#" data-bind="text: displayName || username, click: $parent.connectToHackBox"></a>
+              </div>
+              <div>
+                <p data-bind="text: coins"></p>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
