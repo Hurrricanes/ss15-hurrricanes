@@ -348,7 +348,7 @@ function offHackBoxDisconnected() {
  * @returns {undefined}
  */
 function connectToHackBox(hackedUid, successCallback, failureCallback) {
-  if (typeof hackedUid != "undefined" || hackedUid == "") {
+  if (typeof hackedUid == "undefined" || hackedUid == "") {
     failureCallback("Wrong number of arguments!");
     return;
   }
@@ -427,7 +427,7 @@ function onConnection(onNewConnection, onConnectionChanged, onConnectionClosed) 
  * Cracks a passcode of a connected HackBox
  */
 function crackPasscode(passcode, hackedUid, successCallback, infoCallback, failureCallback) {
-  if (typeof passcode != "undefined" || passcode == "" || typeof hackedUid != "undefined" || hackedUid == "") {
+  if (typeof passcode == "undefined" || passcode == "" || typeof hackedUid == "undefined" || hackedUid == "") {
     failureCallback("Wrong number of arguments!");
     return;
   }
