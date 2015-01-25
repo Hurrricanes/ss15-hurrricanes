@@ -86,20 +86,23 @@ function authenticationCallback(authData) {
 
     // Check whether the user exixsts.
     rootRef.child("users").child(authData.uid).once("value", function(snapshot) {
+      var data = {};
+      if (typeof authData[authData.provider].displayName != "undefined") {
+        data["displayName"] = authData[authData.provider].displayName;
+      }
+      if (typeof authData[authData.provider].username != "undefined") {
+        data["username"] = authData[authData.provider].username;
+      }
+      data["provider"] = authData.provider;
+      data["ip"] = generateHash(authData.uid);
+      
       if (snapshot.val() !== null) {
         // If the user exists we update the data.
-        rootRef.child("users").child(authData.uid).update({
-          provider: authData.provider,
-          displayName: authData[authData.provider].displayName
-        });
+        rootRef.child("users").child(authData.uid).update(data);
       } else {
         // otherwise we add a new user
-        rootRef.child("users").child(authData.uid).set({
-          provider: authData.provider,
-          displayName: authData[authData.provider].displayName,
-          coins: 1000,
-          ip: generateHash(authData.uid)
-        });
+        data["coins"] = 1000;
+        rootRef.child("users").child(authData.uid).set(data);
       }
     });
 
@@ -111,22 +114,35 @@ function authenticationCallback(authData) {
 
 function generateHash(uid) {
   var hash = uid.hashCode();
+  var minus = false;
+  if (hash < 0) {
+    minus = true;
+    hash = -hash;
+  }
   var first = Math.round(hash / (100 * 100 * 100) % 100);
   var second = Math.round(hash % (100 * 100 * 100) / (100 * 100));
   var third = Math.round(hash % (100 * 100) / 100);
   var fourth = Math.round(hash % 100);
-  return first + "." + second + "." + third + "." + fourth;
+
+  var ip = first + "." + second + "." + third + "." + fourth;
+
+  if (minus) {
+    ip = "0." + ip;
+  }
+
+  return ip;
 }
 
-String.prototype.hashCode = function(){
-    var hash = 0;
-    if (this.length == 0) return hash;
-    for (i = 0; i < this.length; i++) {
-        char = this.charCodeAt(i);
-        hash = ((hash<<5)-hash)+char;
-        hash = hash & hash; // Convert to 32bit integer
-    }
+String.prototype.hashCode = function() {
+  var hash = 0;
+  if (this.length == 0)
     return hash;
+  for (i = 0; i < this.length; i++) {
+    char = this.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash;
 }
 
 
@@ -406,7 +422,7 @@ function onConnection(onNewConnection, onConnectionChanged, onConnectionClosed) 
 /**
  * Cracks a passcode of a connected HackBox
  */
-function crackPasscode(passcode, hackedUid, successCallback, infoCallBack, failureCallback) {
+function crackPasscode(passcode, hackedUid, successCallback, infoCallback, failureCallback) {
   var user = getAuth();
   var hackRef = rootRef.child("users").child(hackedUid).child("hacks").child(user.uid);
   hackRef.once("value", function(hackSnapshot) {
