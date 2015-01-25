@@ -4,7 +4,6 @@ $(function () {
         self.isLoggedIn = ko.observable(false);
         self.isConnected = ko.observable(false);
         self.users = ko.observableArray([]);
-        self.box_user_map = [];
         // Register the callback to be fired every time auth state changes
         self.user = getAuth();
 
@@ -21,37 +20,42 @@ $(function () {
             window.location.replace("login.html");
         }
 
+        self.getIndexForUser = function (user) {
+        	for (var i = 0; i < self.users().length; i++) {
+                if (self.users()[i]['box_id'] === user.key()) {
+                    return i;
+                }
+            }
+        }
+
         // callback function to detect new user connected to the network
         self.hackBoxConnectedCallback = function (user) {
             var box = user.val();
             box['box_id'] = user.key();
             box['connected'] = false;
-            self.box_user_map[user.key()] = self.users.length;
             self.users.push(box);
         }
 
         // callback function to detect disconnection of a user
         self.hackBoxDisconnectedCallback = function (user) {
-        	var index = self.box_user_map[user.key()];
+            // find the box with the correct id and remove id from the array
+        	var index = self.getIndexForUser(user);
         	if (index) {
         		self.users.splice(index, 1);	
         	};
-            // find the box with the correct id and remove id from the array
-            // for (var i = 0; i < self.users().length; i++) {
-            //     if (self.users()[i]['box_id'] === user.key()) {
-            //         self.users.splice(i, 1);
-            //     }
-            // }
         }
 
 		// callback function to detect changes of a user
 		self.hackBoxChangedCallback = function (user) {
-
+			var index = self.getIndexForUser(user);
+        	if (index) {
+        		self.users()[index] = user.val();	
+        	};
 		}
 
 		// callback function to detect new connection
 		self.onNewConnection = function (con) {
-			var index = self.box_user_map[con.key()];
+			var index = self.getIndexForUser(con);
 			if (index) {
 				self.users()[index]['connected'] = true;
 			};
@@ -65,7 +69,7 @@ $(function () {
 		* TODO: not working at the moment. disconnect mechanism should be implemented in firebase
 		*/
 		self.onConnectionClosed = function (con) {
-			var index = self.box_user_map[con.key()];
+			var index = self.getIndexForUser(con);
 			if (index) {
 				self.users()[index]['connected'] = false;
 			};
@@ -102,7 +106,6 @@ $(function () {
 								onConnection(self.onNewConnection, self.onConnectionChanged, self.onConnectionClosed);
 								term.echo('Connection successful!');
 							}, function (error) {
-								self.isConnected(false);
 								if (typeof(error) == "function") {
 									term.error("Connection failed!");
 								} else {
