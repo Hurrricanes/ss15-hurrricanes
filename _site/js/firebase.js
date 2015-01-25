@@ -314,6 +314,12 @@ function connectToHackBox(hackedUid, successCallback, failureCallback) {
         passcode: Math.round(Math.random() * userSnapshot.val().coins)
       }, function(error) {
         if (error === null) {
+          var connectionsRef = rootRef.child("users").child(user.uid).child("connections");
+          var newConnectionRef = connectionsRef.push();
+          newConnectionRef.onDisconnect().remove();
+          newConnectionRef.set({
+            hacked: hackedUid
+          });
           successCallback(newHackRef);
         } else {
           failureCallback(error);
@@ -343,5 +349,21 @@ function onHack(onNewHackCallBack, onHackChangeCallBack, onHackStoppedCallBack) 
   }
   if (onHackStoppedCallBack !== null) {
     rootRef.child("users").child(user.uid).child("hacks").on("child_removed", onHackStoppedCallBack);
+  }
+}
+
+/**
+ * Gives a callback when a connection made from this HackBox to another.
+ */
+function onConnection(onNewConnection, onConnectionChanged, onConnectionClosed) {
+  var user = getAuth();
+  if (onNewConnection !== null) {
+    rootRef.child("users").child(user.uid).child("connections").on("child_added", onNewConnection);
+  }
+  if (onConnectionChanged !== null) {
+    rootRef.child("users").child(user.uid).child("connections").on("child_changed", onConnectionChanged);
+  }
+  if (onConnectionClosed !== null) {
+    rootRef.child("users").child(user.uid).child("connections").on("child_removed", onConnectionClosed);
   }
 }
