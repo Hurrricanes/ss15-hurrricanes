@@ -34,6 +34,7 @@ $(function () {
 
 		// disconnect user from the network
 		self.disconnect = function() {
+			offHackNetChanged();
 			disconnect(); // disconnect from firebase
 			self.users([]); // clear user list if current user is disconnected
 			self.isConnected(false);
@@ -63,8 +64,12 @@ $(function () {
 		}
 
 		// connect to the selected hack box
-		self.connectToBox = function (box) {
-			console.log(box);
+		self.connectToHackBox = function (box) {
+			connectToHackBox(box.box_id, function (hackRef) {
+				console.log("Hack ref: " + hackRef);
+			}, function () {
+				alert("Failed to connect. Please retry!");
+			});
 		}
 	}
 	ko.applyBindings(new HackboxViewModel());
