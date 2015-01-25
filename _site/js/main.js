@@ -4,6 +4,7 @@ $(function () {
         self.isLoggedIn = ko.observable(false);
         self.isConnected = ko.observable(false);
         self.users = ko.observableArray([]);
+        self.box_user_map = [];
         // Register the callback to be fired every time auth state changes
         self.user = getAuth();
 
@@ -20,32 +21,61 @@ $(function () {
             window.location.replace("login.html");
         }
 
-        var ips = 0;
         // callback function to detect new user connected to the network
         self.hackBoxConnectedCallback = function (user) {
             var box = user.val();
             box['box_id'] = user.key();
             box['connected'] = false;
-            box['ip'] = ips;
-            ips++;
+            self.box_user_map[user.key()] = self.users.length;
             self.users.push(box);
         }
 
         // callback function to detect disconnection of a user
         self.hackBoxDisconnectedCallback = function (user) {
+        	var index = self.box_user_map[user.key()];
+        	if (index) {
+        		self.users.splice(index, 1);	
+        	};
             // find the box with the correct id and remove id from the array
-            for (var i = 0; i < self.users().length; i++) {
-                if (self.users()[i]['box_id'] === user.key()) {
-                    self.users.splice(i, 1);
-                }
-            }
-            ;
+            // for (var i = 0; i < self.users().length; i++) {
+            //     if (self.users()[i]['box_id'] === user.key()) {
+            //         self.users.splice(i, 1);
+            //     }
+            // }
         }
 
 		// callback function to detect changes of a user
 		self.hackBoxChangedCallback = function (user) {
 
 		}
+
+		// callback function to detect new connection
+		self.onNewConnection = function (con) {
+			var index = self.box_user_map[con.key()];
+			if (index) {
+				self.users()[index]['connected'] = true;
+			};
+		}
+
+		// callback function to detect changes in exisiting connections
+		self.onConnectionChanged = function (con) {}
+
+		// callback function to detect connections closed
+		/**
+		* TODO: not working at the moment. disconnect mechanism should be implemented in firebase
+		*/
+		self.onConnectionClosed = function (con) {
+			var index = self.box_user_map[con.key()];
+			if (index) {
+				self.users()[index]['connected'] = false;
+			};
+		}
+
+		self.connectedBoxes = ko.computed(function () {
+			return ko.utils.arrayFilter(self.users(), function (item) {
+				return item['connected'] == true;
+			});
+		});
 
 		self.connected = new buzz.sound("sounds/connected", {
             formats: ["mp3"]
@@ -69,6 +99,7 @@ $(function () {
 								self.isConnected(true);
 								// register listeners to hackbox changes
 								onHackNetChanged(self.hackBoxConnectedCallback, self.hackBoxChangedCallback, self.hackBoxDisconnectedCallback);
+								onConnection(self.onNewConnection, self.onConnectionChanged, self.onConnectionClosed);
 								term.echo('Connection successful!');
 							}, function (error) {
 								self.isConnected(false);
@@ -96,7 +127,12 @@ $(function () {
 		        			break;
 		        		case 'hack':
 		        			term.echo("Initiating...");
-		        			var box = self.users()[args[1]];
+		        			var box = undefined;
+		        			for (var i = 0; i < self.users().length; i++) {
+				                if (self.users()[i]['ip'] === args[1]) {
+				                    box = self.users()[i];
+				                }
+				            }
 		        			if(box) {
 		        				// initiate a connection with a box
 			        			connectToHackBox(box.box_id, function () {

@@ -29,11 +29,23 @@
                         <div class="row">
                             <div class="col-xs-6 col-md-6">
                                 <div class="dash-list">
-                                    <ul class="list-inline" data-bind="foreach: connectedBoxes()"></ul>
+                                    <ul class="list-inline" data-bind="foreach: connectedBoxes()">
+                                        <li>
+                                            <div class="dash-item">
+                                                <p data-bind="text: ip"></p>
+                                                <p data-bind="text: displayName || username"></p>
+                                                <p data-bind="text: coins"></p>
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                             <div class="col-xs-6 col-md-6">
-                                <div class="dash-list"></div>
+                                <!-- <div class="dash-list">
+                                    <ul class="list-inline" data-bind="foreach: contentnectedBoxes()">
+                                        <li><p data-bind="text: ip"></p></li>
+                                    </ul>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -52,16 +64,19 @@
         </div>
         <div class="content" data-bind="if: isLoggedIn()">
             <div class="row game-window">
-                <div class="col-xs-12 col-md-8" >
+                <div class="col-xs-12 col-md-6" >
                     <div id="terminal"></div>   
                 </div>
-                <div class="col-xs-12 col-md-4" data-bind="visible: isConnected()">
+                <div class="col-xs-12 col-md-6" data-bind="visible: isConnected()">
                     <h3>Online</h3>
                         <div class="box-list">
                         <ul class="list-group" data-bind="foreach: users()">
                             <li class="list-group-item" data-bind="css: {active: connected}">
-                                <div class="col-xs-10 col-md-10">
+                                <div class="col-xs-6 col-md-6">
                                     <a href="#" data-bind="text: displayName || username, click: $parent.connectToHackBox"></a>
+                                </div>
+                                <div class="col-xs-4 col-md-4">
+                                    <p data-bind="text: ip"></p>
                                 </div>
                                 <div>
                                     <p data-bind="text: coins"></p>
