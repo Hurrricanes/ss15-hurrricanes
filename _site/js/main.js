@@ -253,7 +253,7 @@ $(function() {
         term.echo('');
       }
     }, {
-      greetings: 'Welcome to Hackbox.\nEnter "help" for a guide\n',
+      greetings: 'Welcome to Hackbox.\nEnter "help" for a guide\n connect -- connect to the hacking network \n hack IP -- initiate hack on another user \n crack IP PASSCODE -- try to crack target\'s passcode with \n defend IP PASSCODE -- defend your account from other hackers \n disconnect -- disconnect from hacking network ',
       name: 'terminal',
       height: 300,
       prompt: 'HackBox~$ '
