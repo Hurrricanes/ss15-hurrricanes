@@ -71,7 +71,8 @@ body {
 }
 
 #terminal{
-    border: 2px solid #0c0;   
+    border: 2px solid #0c0;  
+    margin-top: 11%;
 }
 .innerDiv {
     
