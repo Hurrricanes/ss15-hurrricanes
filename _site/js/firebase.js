@@ -406,7 +406,7 @@ function onConnection(onNewConnection, onConnectionChanged, onConnectionClosed) 
 /**
  * Cracks a passcode of a connected HackBox
  */
-function crackPasscode(passcode, hackedUid, successCallback, infoCallBack, failureCallback) {
+function crackPasscode(passcode, hackedUid, successCallback, infoCallback, failureCallback) {
   var user = getAuth();
   var hackRef = rootRef.child("users").child(hackedUid).child("hacks").child(user.uid);
   hackRef.once("value", function(hackSnapshot) {
