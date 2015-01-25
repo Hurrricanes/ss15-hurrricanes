@@ -213,7 +213,7 @@ $(function() {
                   term.error(error);
                 });
               } else {
-                term.error("IP " + args[1] + " not found");
+                term.error("IP " + args[1] + " not connected");
               }
               break;
             case 'defend':
