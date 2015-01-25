@@ -387,9 +387,30 @@ function crackPasscode(passcode, hackedUid, successCallback, failureCallback) {
     if (user.uid == hackRef.key()) {
       if (passcode == hack.passcode) {
         // reduce money of hacked
-        // increase money of hacker
+        var coinDiff = 0;
+        rootRef.child("connected").child(hackedUid).child("coins").transaction(function(currentCoins) {
+          coinDiff = Math.round(currentCoins * hack.attempts / 100);
+          return currentCoins - coinDiff;
+        }, function(error, commited, coins) {
+          // Update the users branch as well
+          rootRef.child("users").child(hackedUid).update({coins: coins.val()});
+          hackedCoins = coins;
+          // increase money of hacker
+          rootRef.child("connected").child(user.uid).child("coins").transaction(function(currentCoins) {
+            return currentCoins + coinDiff;
+          }, function(error, commited, coins) {
+            rootRef.child("users").child(user.uid).update({coins: coins.val()});
+            if (error) {
+              failureCallback(error);
+            } else {
+              successCallback();
+            }
+          });
+        });
         // remove hack
+        hackRef.remove();
         // remove connection
+        rootRef.child("users").child(user.uid).child("connections").child(hackedUid).removed();
       } else if (hack.attempts == 1) {
         hackRef.remove();
         rootRef.child("users").child(user.uid).child("connections").child(hackedUid).remove();
