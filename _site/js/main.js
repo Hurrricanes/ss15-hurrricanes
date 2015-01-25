@@ -96,8 +96,6 @@ $(function() {
     self.onConnectionClosed = function(obj) {
       var index = self.getIndexForObject('con', obj);
       if (index != undefined) {
-        var term = $('#terminal').terminal();
-        term.error(self.conBoxes()[index]['ip'] + ' servived the attack!');
         self.conBoxes.splice(index, 1);
       };
     }
