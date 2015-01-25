@@ -173,7 +173,8 @@ function connect(successCallback, failureCallback) {
         rootRef.child("connected").child(authData.uid).once("value", function(connectedSnapshot) {
           if (connectedSnapshot.val() === null) {
             var data = {};
-            data["coins"] = userSnapshot.val()["coins"];
+            data["coins"] = userSnapshot.val().coins;
+            data["ip"] = userSnapshot.val().ip;
             if (typeof authData[authData.provider].displayName != "undefined") {
               data["displayName"] = authData[authData.provider].displayName;
             }
