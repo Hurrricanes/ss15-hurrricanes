@@ -78,7 +78,7 @@ $(function () {
 
 
 jQuery(function($, undefined) {
-    $('#term_demo').terminal(function(command, term) {
+    $('#terminal').terminal(function(command, term) {
         if (command !== '') {
             try {
                 var result = window.eval(command);
