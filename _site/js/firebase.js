@@ -357,34 +357,61 @@ function connectToHackBox(hackedUid, successCallback, failureCallback) {
     failureCallback("You cannot hack yourself!");
     return;
   }
-  rootRef.child("connected").child(user.uid).once("value", function(userSnapshot) {
-    if (userSnapshot !== null) {
-      var hackRef = rootRef.child("users").child(hackedUid).child("hacks").child(user.uid);
-      hackRef.onDisconnect().remove();
-      hackRef.once("value", function(hackSnapshot) {
-        if (hackSnapshot.val() === null) {
-          hackRef.set({
-            passcode: Math.round(Math.random() * userSnapshot.val().coins),
-            attempts: 10
-          }, function(error) {
-            if (error === null) {
-              var connectionRef = rootRef.child("users").child(user.uid).child("connections").child(hackedUid);
-              connectionRef.onDisconnect().remove();
-              connectionRef.set(true);
-              successCallback();
+
+  var hackRef = rootRef.child("hacks").child(hackedUid).child(user.uid);
+  hackRef.onDisconnect().remove();
+  rootRef.child("connected").child(hackedUid).once("value", function(userSnapshot) {
+    var hackedUser = userSnapshot.val();
+    if (hackedUser !== null) {
+      rootRef.child("connected").child(user.uid).once("value", function(userSnapshot) {
+        var hacker = userSnapshot.val();
+        if (hacker !== null) {
+          var hackerInHacksRef = rootRef.child("hacks").child(hackedUid).child(user.uid);
+          hackerInHacksRef.once("value", function(hackerInHacksSnapshot) {
+            var hackerInHacks = hackerInHacksSnapshot.val();
+            if (hackerInHacks === null) {
+              hackerInHacksRef.onDisconnect().remove();
+              var data = {};
+              data["ip"] = hacker.ip;
+              if (typeof hacker.displayName != "undefined") {
+                data["displayName"] = hacker.displayName;
+              }
+              if (typeof hacker.username != "undefined") {
+                data["username"] = hacker.username;
+              }
+              data["attempts"] = 10;
+              data["passcode"] = Math.round(Math.random() * hackedUser.coins);
+              hackerInHacksRef.set(data, function(error) {
+                if (error === null) {
+                  var userInConnectionRef = rootRef.child("connections").child(user.uid).child(hackedUid);
+                  userInConnectionRef.onDisconnect().remove();
+                  
+                  var connectionData = {};
+                  connectionData["ip"] = hackedUser.ip;
+                  if (typeof hackedUser.displayName != "undefined") {
+                    connectionData["displayName"] = hackedUser.displayName;
+                  }
+                  if (typeof hackedUser.username != "undefined") {
+                    connectionData["username"] = hackedUser.username;
+                  }
+                  connectionData["attempts"] = 10;
+                  connectionData["coins"] = hackedUser.coins;
+                  userInConnectionRef.set(connectionData);
+                } else {
+                  failureCallback(error);
+                }
+              });
             } else {
-              failureCallback(error);
+              failureCallback("You are already connected to this HackBox");
             }
           });
+        } else {
+          failureCallback("You are not connected to the HackNet");
         }
-      }, function(error) {
-        failureCallback(error);
       });
     } else {
       failureCallback("This HackBox is not connected to the HackNet");
     }
-  }, function(error) {
-    failureCallback(error);
   });
 }
 
@@ -397,13 +424,13 @@ function connectToHackBox(hackedUid, successCallback, failureCallback) {
 function onHack(onNewHackCallBack, onHackChangeCallBack, onHackStoppedCallBack) {
   var user = getAuth();
   if (onNewHackCallBack !== null) {
-    rootRef.child("users").child(user.uid).child("hacks").on("child_added", onNewHackCallBack);
+    rootRef.child("hacks").child(user.uid).on("child_added", onNewHackCallBack);
   }
   if (onHackChangeCallBack !== null) {
-    rootRef.child("users").child(user.uid).child("hacks").on("child_changed", onHackChangeCallBack);
+    rootRef.child("hacks").child(user.uid).on("child_changed", onHackChangeCallBack);
   }
   if (onHackStoppedCallBack !== null) {
-    rootRef.child("users").child(user.uid).child("hacks").on("child_removed", onHackStoppedCallBack);
+    rootRef.child("hacks").child(user.uid).on("child_removed", onHackStoppedCallBack);
   }
 }
 
@@ -413,13 +440,13 @@ function onHack(onNewHackCallBack, onHackChangeCallBack, onHackStoppedCallBack) 
 function onConnection(onNewConnection, onConnectionChanged, onConnectionClosed) {
   var user = getAuth();
   if (onNewConnection !== null) {
-    rootRef.child("users").child(user.uid).child("connections").on("child_added", onNewConnection);
+    rootRef.child("connections").child(user.uid).on("child_added", onNewConnection);
   }
   if (onConnectionChanged !== null) {
-    rootRef.child("users").child(user.uid).child("connections").on("child_changed", onConnectionChanged);
+    rootRef.child("connections").child(user.uid).on("child_changed", onConnectionChanged);
   }
   if (onConnectionClosed !== null) {
-    rootRef.child("users").child(user.uid).child("connections").on("child_removed", onConnectionClosed);
+    rootRef.child("connections").child(user.uid).on("child_removed", onConnectionClosed);
   }
 }
 
@@ -432,7 +459,7 @@ function crackPasscode(passcode, hackedUid, successCallback, infoCallback, failu
     return;
   }
   var user = getAuth();
-  var hackRef = rootRef.child("users").child(hackedUid).child("hacks").child(user.uid);
+  var hackRef = rootRef.child("hacks").child(hackedUid).child(user.uid);
   hackRef.once("value", function(hackSnapshot) {
     var hack = hackSnapshot.val();
     if (user.uid == hackRef.key()) {
@@ -445,7 +472,6 @@ function crackPasscode(passcode, hackedUid, successCallback, infoCallback, failu
         }, function(error, commited, coins) {
           // Update the users branch as well
           rootRef.child("users").child(hackedUid).update({coins: coins.val()});
-          hackedCoins = coins;
           // increase money of hacker
           rootRef.child("connected").child(user.uid).child("coins").transaction(function(currentCoins) {
             return currentCoins + coinDiff;
@@ -461,16 +487,16 @@ function crackPasscode(passcode, hackedUid, successCallback, infoCallback, failu
         // remove hack
         hackRef.remove();
         // remove connection
-        rootRef.child("users").child(user.uid).child("connections").child(hackedUid).removed();
+        rootRef.child("connections").child(user.uid).child(hackedUid).remove();
       } else if (hack.attempts == 1) {
         hackRef.remove();
-        rootRef.child("users").child(user.uid).child("connections").child(hackedUid).remove();
+        rootRef.child("connections").child(user.uid).child(hackedUid).remove();
         failureCallback("You attemped max number of time!");
       } else {
         hackRef.child("attempts").transaction(function(currentAttempts) {
           if (currentAttempts == 1) {
             hackRef.remove();
-            rootRef.child("users").child(user.uid).child("connections").child(hackedUid).remove();
+            rootRef.child("connections").child(user.uid).child(hackedUid).remove();
             failureCallback("You attemped max number of time!");
             return;
           } else {
@@ -478,6 +504,7 @@ function crackPasscode(passcode, hackedUid, successCallback, infoCallback, failu
           }
         }, function(error, commited, attempts) {
           if (commited) { // If the hack is not removed due to no attempts
+            rootRef.child("connections").child(user.uid).child(hackedUid).update({ attempts: attempts.val()});
             if (hack.passcode < passcode) {
               infoCallback("Passcode is less than " + passcode + ".");
             } else {
@@ -506,7 +533,7 @@ function defend(passcode, hackerUid, successCallback, infoCallback, failureCallb
     return;
   }
   var user = getAuth();
-  var hackRef = rootRef.child("users").child(user.uid).child("hacks").child(hackerUid);
+  var hackRef = rootRef.child("hacks").child(user.uid).child(hackerUid);
   hackRef.once("value", function(hackSnapshot) {
     var hack = hackSnapshot.val();
     if (typeof hack == "undefined" || hack == "") {
@@ -517,7 +544,7 @@ function defend(passcode, hackerUid, successCallback, infoCallback, failureCallb
       // remove hack
       hackRef.remove();
       // remove connection
-      rootRef.child("users").child(hackerUid).child("connections").child(user.uid).removed();
+      rootRef.child("connections").child(hackerUid).child(user.uid).remove();
       successCallback("You have successfully defended!");
     } else if (hack.passcode < passcode) {
       infoCallback("Passcode is less than " + passcode + ".");
