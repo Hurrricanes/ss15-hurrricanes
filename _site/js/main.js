@@ -97,7 +97,7 @@ $(function() {
       var index = self.getIndexForObject('con', obj);
       if (index != undefined) {
         var term = $('#terminal').terminal();
-        self.terminalHandler('print alert You%20were%20defended');
+        term.error(self.conBoxes()[index]['ip'] + ' servived the attack!');
         self.conBoxes.splice(index, 1);
       };
     }
@@ -136,7 +136,7 @@ $(function() {
       formats: ["mp3"]
     });
 
-    self.terminalHandler = function(command, term) {
+    $('#terminal').terminal(function(command, term) {
       if (args !== '') {
         var args = command.split(' ');
         try {
@@ -238,12 +238,6 @@ $(function() {
             case 'help':
               // show guide to Hackbox
               break;
-            case 'print':
-              if (args[1] == "alert") {
-                term.error(args[2]);
-              } else if(args[1] == "echo"){
-                term.echo(args[2]);
-              };
             default:
               term.error("Command not found!");
               break;
@@ -254,9 +248,7 @@ $(function() {
       } else {
         term.echo('');
       }
-    };
-
-    $('#terminal').terminal(self.terminalHandler, {
+    }, {
       greetings: 'Welcome to Hackbox.\nEnter "help" for a guide\n',
       name: 'terminal',
       height: 300,
