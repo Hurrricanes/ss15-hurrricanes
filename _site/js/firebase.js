@@ -148,18 +148,24 @@ function connect(successCallback, failureCallback) {
   if (authData !== null) {
     rootRef.child("users").child(authData.uid).once("value", function(userSnapshot) {
       if (userSnapshot.val() !== null) {
-        var connectedRef = rootRef.child("connected").child(authData.uid);
-        var data = {};
-        data["coins"] = userSnapshot.val()["coins"];
-        if (typeof authData[authData.provider].displayName != "undefined") {
-          data["displayName"] = authData[authData.provider].displayName;
-        }
-        if (typeof authData[authData.provider].username != "undefined") {
-          data["username"] = authData[authData.provider].username;
-        }
-        connectedRef.set(data);
-        connectedRef.onDisconnect().remove();
-        successCallback();
+        rootRef.child("connected").child(authData.uid).once("value", function(connectedSnapshot) {
+          if (connectedSnapshot.val() === null) {
+            var data = {};
+            data["coins"] = userSnapshot.val()["coins"];
+            if (typeof authData[authData.provider].displayName != "undefined") {
+              data["displayName"] = authData[authData.provider].displayName;
+            }
+            if (typeof authData[authData.provider].username != "undefined") {
+              data["username"] = authData[authData.provider].username;
+            }
+            var connectedRef = rootRef.child("connected").child(authData.uid);
+            connectedRef.set(data);
+            connectedRef.onDisconnect().remove();
+            successCallback();
+          } else {
+            failureCallback("You are already connected!");
+          }
+        });
       } else {
         failureCallback("Cannot find the user!");
       }
