@@ -12,6 +12,18 @@ body {
     overflow: hidden;
     padding: 20px;
 }
+.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+    background-image: none;
+    background-color: #5CB85C;
+    border-color: #5CB85C;
+}
+.list-group-item {
+    background-image: none;
+    background-color: #000;
+}
+.list-group-item.active a {
+    color: #fff;
+}
 .btn-social{
   margin-bottom: 15px;  
 }
