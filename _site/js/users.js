@@ -19,7 +19,7 @@ $(function () {
 
         function authDataCallback(authData) {
             if (authData) {
-                var url = "../_site/";
+                var url = "index.html";
                 window.location.replace(url);
 
             }

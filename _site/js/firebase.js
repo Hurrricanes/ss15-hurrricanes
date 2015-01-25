@@ -95,7 +95,7 @@ function authenticationCallback(authData) {
       }
       data["provider"] = authData.provider;
       data["ip"] = generateHash(authData.uid);
-      
+
       if (snapshot.val() !== null) {
         // If the user exists we update the data.
         rootRef.child("users").child(authData.uid).update(data);
@@ -488,6 +488,41 @@ function crackPasscode(passcode, hackedUid, successCallback, infoCallback, failu
       }
     } else {
       failureCallback("You are not the owner of this hack!");
+    }
+  });
+}
+
+/**
+ * Defends against a given hack.
+ * @param {type} passcode Guessing passcode
+ * @param {type} hackerUid Hacker's box id
+ * @param {type} successCallback is called back when successfully defends
+ * @param {type} infoCallback 
+ * @param {type} failureCallback is called if any error
+ * @returns {unresolved} */
+function defend(passcode, hackerUid, successCallback, infoCallback, failureCallback) {
+  if (typeof passcode == "undefined" || passcode == "" || typeof hackerUid == "undefined" || hackerUid == "") {
+    failureCallback("Wrong number of arguments!");
+    return;
+  }
+  var user = getAuth();
+  var hackRef = rootRef.child("users").child(user.uid).child("hacks").child(hackerUid);
+  hackRef.once("value", function(hackSnapshot) {
+    var hack = hackSnapshot.val();
+    if (typeof hack == "undefined" || hack == "") {
+      failureCallback("Cannot find this hack");
+      return;
+    }
+    if (passcode == hack.passcode) {
+      // remove hack
+      hackRef.remove();
+      // remove connection
+      rootRef.child("users").child(hackerUid).child("connections").child(user.uid).removed();
+      successCallback("You have successfully defended!");
+    } else if (hack.passcode < passcode) {
+      infoCallback("Passcode is less than " + passcode + ".");
+    } else {
+      infoCallback("Passcode is greater than " + passcode + ".");
     }
   });
 }
