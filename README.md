@@ -91,5 +91,12 @@ You can use `disconnect` command to exit out of the hacking network. Once you di
 
 * Firebase
 * Knockout JS
+* Boostrap 
+* Font Awesome
+* jQuery
+* jQuery.terminal
+* JavaScript
+* CSS
+* HTML
 
 -----------------------------------------------------------------------
