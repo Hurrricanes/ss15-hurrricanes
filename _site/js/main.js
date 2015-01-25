@@ -22,10 +22,11 @@ $(function () {
 
         self.getIndexForUser = function (user) {
         	for (var i = 0; i < self.users().length; i++) {
-                if (self.users()[i]['box_id'] === user.key()) {
+                if (self.users()[i]['box_id'] == user.key()) {
                     return i;
                 }
             }
+            return undefined;
         }
 
         // callback function to detect new user connected to the network
@@ -40,7 +41,7 @@ $(function () {
         self.hackBoxDisconnectedCallback = function (user) {
             // find the box with the correct id and remove id from the array
         	var index = self.getIndexForUser(user);
-        	if (index) {
+        	if (index != undefined) {
         		self.users.splice(index, 1);	
         	};
         }
@@ -48,15 +49,21 @@ $(function () {
 		// callback function to detect changes of a user
 		self.hackBoxChangedCallback = function (user) {
 			var index = self.getIndexForUser(user);
-        	if (index) {
-        		self.users()[index] = user.val();	
+        	if (index != undefined) {
+        		var users = self.users();
+        		var connected = users[index]['connected'];        		
+        		self.users([]);
+        		users[index] = user.val();
+        		users[index]['connected'] = connected;
+            	users[index]['box_id'] = user.key();
+        		self.users(users);
         	};
 		}
 
 		// callback function to detect new connection
 		self.onNewConnection = function (con) {
 			var index = self.getIndexForUser(con);
-			if (index) {
+			if (index != undefined) {
 				self.users()[index]['connected'] = true;
 			};
 		}
@@ -71,7 +78,7 @@ $(function () {
 		*/
 		self.onConnectionClosed = function (con) {
 			var index = self.getIndexForUser(con);
-			if (index) {
+			if (index != undefined) {
 				self.users()[index]['connected'] = false;
 			};
 		}
