@@ -96,9 +96,10 @@ $(function() {
     self.onConnectionClosed = function(obj) {
       var index = self.getIndexForObject('con', obj);
       if (index != undefined) {
+        var term = $('#terminal').terminal();
+        self.terminalHandler('print alert You%20were%20defended');
         self.conBoxes.splice(index, 1);
-      }
-      ;
+      };
     }
 
     // callback function to detect new hack
@@ -116,8 +117,7 @@ $(function() {
         var box = obj.val();
         box['box_id'] = obj.key();
         self.hackBoxes.push(box);
-      }
-      ;
+      };
     }
 
     // callback function to detect hacks closed
@@ -125,8 +125,7 @@ $(function() {
       var index = self.getIndexForObject('hack', obj);
       if (index != undefined) {
         self.hackBoxes.splice(index, 1);
-      }
-      ;
+      };
     }
 
     self.connected = new buzz.sound("sounds/connected", {
@@ -137,7 +136,7 @@ $(function() {
       formats: ["mp3"]
     });
 
-    $('#terminal').terminal(function(command, term) {
+    self.terminalHandler = function(command, term) {
       if (args !== '') {
         var args = command.split(' ');
         try {
@@ -239,6 +238,12 @@ $(function() {
             case 'help':
               // show guide to Hackbox
               break;
+            case 'print':
+              if (args[1] == "alert") {
+                term.error(args[2]);
+              } else if(args[1] == "echo"){
+                term.echo(args[2]);
+              };
             default:
               term.error("Command not found!");
               break;
@@ -249,7 +254,9 @@ $(function() {
       } else {
         term.echo('');
       }
-    }, {
+    };
+
+    $('#terminal').terminal(self.terminalHandler, {
       greetings: 'Welcome to Hackbox.\nEnter "help" for a guide\n',
       name: 'terminal',
       height: 300,
