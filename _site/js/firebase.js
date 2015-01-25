@@ -350,9 +350,7 @@ function connectToHackBox(hackedUid, successCallback, failureCallback) {
             if (error === null) {
               var connectionRef = rootRef.child("users").child(user.uid).child("connections").child(hackedUid);
               connectionRef.onDisconnect().remove();
-              connectionRef.set({
-                hacked: hackedUid
-              });
+              connectionRef.set(true);
               successCallback();
             } else {
               failureCallback(error);
