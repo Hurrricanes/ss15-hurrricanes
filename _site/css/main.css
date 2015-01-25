@@ -7,15 +7,25 @@ body {
     height: 300px;
 }
 .dashboard {
+  height: 150px;
 }
 .dash-list {
-    overflow-x: auto; 
+  overflow-x: auto; 
 }
-.dash-item {
+.dash-item-con {
     padding: 5px;
     margin: 5px;
     border: 2px solid #0c0;
-    font-size: 12px;
+    height: 120px;
+    font-size: 11px;
+}
+.dash-item-hack {
+    padding: 5px;
+    margin: 2px;
+    color: #C00;
+    height: 120px;
+    border: 2px solid #C00;
+    font-size: 11px;
 }
 .logincard {
     max-width: 30%;

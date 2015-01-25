@@ -25,17 +25,17 @@
         <div class="top-header">
             <div class="row">
                 <div class="col-xs-9 col-md-9">
-                    <div class="dashboard" data-bind="visible: isConnected()">
-                        <div class="row">
+                    <div class="dashboard">
+                        <div class="row"  data-bind="visible: isConnected()">
                             <div class="col-xs-6 col-md-6">
                                 <div class="dash-list">
                                     <ul class="list-inline" data-bind="foreach: conBoxes()">
                                         <li>
-                                            <div class="dash-item">
-                                                <p data-bind="text: ip"></p>
-                                                <p data-bind="text: displayName || username"></p>
-                                                <p data-bind="text: coins"></p>
-                                                <p data-bind="text: attempts"></p>
+                                            <div class="dash-item-con">
+                                                <p data-bind="text: 'IP: ' + ip"></p>
+                                                <p data-bind="text: 'Name: ' + (displayName || username)"></p>
+                                                <p data-bind="text: 'Coins:' + coins"></p>
+                                                <p data-bind="text: 'Attempts remaining: ' + attempts"></p>
                                             </div>
                                         </li>
                                     </ul>
@@ -45,10 +45,10 @@
                                 <div class="dash-list">
                                     <ul class="list-inline" data-bind="foreach: hackBoxes()">
                                         <li>
-                                            <div class="dash-item">
-                                                <p data-bind="text: ip"></p>
-                                                <p data-bind="text: displayName || username"></p>
-                                                <p data-bind="text: attempts"></p>
+                                            <div class="dash-item-hack">
+                                                <p data-bind="text: 'IP: ' + ip"></p>
+                                                <p data-bind="text: 'Name: ' + (displayName || username)"></p>
+                                                <p data-bind="text: 'Attempts remaining: ' + attempts"></p>
                                             </div>
                                         </li>
                                     </ul>
