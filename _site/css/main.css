@@ -1,6 +1,6 @@
 body {
     background-color: #000;
-    color: #5CB85C;
+    color: #0c0;
 }
 .logincard {
     max-width: 30%;
@@ -15,18 +15,21 @@ body {
 }
 .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
     background-image: none;
-    background-color: #5CB85C;
-    border-color: #5CB85C;
+    background-color: #0c0;
+    border-color: #FFF;
 }
 .list-group-item {
     background-image: none;
     background-color: #000;
 }
 .list-group-item.active a {
-    color: #fff;
+    color: #FFF;
 }
 .btn-social{
   margin-bottom: 15px;  
+}
+.btn-success:disabled{
+    background-color: #0c0;
 }
 #image{
     margin-top: 5%; 
@@ -46,6 +49,12 @@ body {
 }
 .game-window {
 	margin-top: 20px;
+        
+}
+
+#terminal{
+    
+ border: 2px solid #0c0;   
 }
 .innerDiv {
     

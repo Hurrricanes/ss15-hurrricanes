@@ -10,6 +10,7 @@
   <script src="js/firebase.js"></script>
   <script src="js/jquery.terminal-0.8.8.min.js"></script>
   <script src="js/jquery.mousewheel.js"></script>
+  <script src="js/buzz.min.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
   <link rel="stylesheet" href="css/bootstrap.css">
   <link rel="stylesheet" href="css/bootstrap-theme.css">
@@ -26,8 +27,8 @@
     <div class="row">
       <div class="col-xs-8 col-md-8"></div>      
       <div class="col-xs-2 col-md-2">
-          <button disabled class="btn btn-success" data-bind="visible: !isConnected()"><i class="fa fa-cubes"></i></button>
-          <button disabled class="btn btn-success" data-bind="visible: isConnected()"><i class="fa fa-cube"></i></button>
+          <button disabled class="btn btn-success" data-bind="visible: isConnected()"><i class="fa fa-cubes"></i></button>
+          <button disabled class="btn btn-success" data-bind="visible: !isConnected()"><i class="fa fa-cube"></i></button>
       </div>
       <div class="col-xs-2 col-md-2">
           <button class="btn btn-info" data-bind="click: signout, visible: isLoggedIn()"><i class="fa fa-sign-out"></i>Signout</button>
@@ -51,7 +52,6 @@ Disconnect</button>
 
       <div class="row game-window">
         <div class="col-xs-12 col-md-8" >
-          <h3>Game</h3>
           <div id="terminal"></div>   
         </div>
         <div class="col-xs-12 col-md-4">
