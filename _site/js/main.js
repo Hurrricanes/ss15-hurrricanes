@@ -101,6 +101,9 @@ $(function () {
 			        			term.error("IP "+ args[1] +" not found");
 			        		}
 			        		break;
+			        	case 'help':
+			        		// show guide to Hackbox
+			        		break;
 		        		default:
 		        			term.error("Command not found!");
 		        			break;
@@ -112,7 +115,7 @@ $(function () {
 				term.echo('');
 			}
 	    }, {
-	        greetings: 'Welcome to Hackbox',
+	        greetings: 'Welcome to Hackbox.\nEnter "help" for a guide\n',
 	        name: 'terminal',
 	        height: 300,
 	        prompt: 'HackBox~$ '

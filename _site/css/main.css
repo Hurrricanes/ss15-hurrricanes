@@ -2,6 +2,20 @@ body {
     background-color: #000;
     color: #0c0;
 }
+.box-list {
+    overflow-y: auto;
+    height: 300px;
+}
+.dashboard {
+    border: 2px solid #00C;
+}
+.dash-list {
+    border: 2px solid #0C0;
+    overflow-x: auto; 
+}
+.dash-item {
+    border: 2px solid #F00;
+}
 .logincard {
     max-width: 30%;
     margin-top: 10%;
@@ -23,6 +37,9 @@ body {
     background-color: #000;
 }
 .list-group-item.active a {
+    color: #FFF;
+}
+.list-group-item a {
     color: #FFF;
 }
 .btn-social{
@@ -53,32 +70,13 @@ body {
 }
 
 #terminal{
-    
- border: 2px solid #0c0;   
+    border: 2px solid #0c0;   
 }
 .innerDiv {
     
 	margin: 10% ;  
         margin-top: 16px; 
 	max-width: 80%;
-}
-
-.ui-slider.ui-slider-horizontal.ui-widget.ui-widget-content.ui-corner-all {
-    border: 1px solid #dbdbdb;
-    border-radius: 14px;
-    margin-top: 20px;
-}
-
-.ui-slider-handle.ui-state-default.ui-corner-all {
-    background: url("../img/sliderhandle.png") no-repeat scroll center center transparent !important;
-    border: medium none;
-    height: 1.3em;
-    outline: medium none;
-    width: 1.3em;
-}
-
-.ui-slider-range.ui-widget-header.ui-corner-all {
-    background: url("../img/sliderfill.png") repeat scroll 0 0 transparent;
 }
 
 @keyframes blink {
